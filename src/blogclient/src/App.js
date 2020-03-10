@@ -47,6 +47,7 @@ function renderRow(props) {
     return (
         <ListItem button style={style} key={index}>
             <ListItemText primary={`${lista[index].getText()}`} />
+            <ListItemText primary={`Author: ${lista[index].getAuthor()}`} />
         </ListItem>
     );
 }
