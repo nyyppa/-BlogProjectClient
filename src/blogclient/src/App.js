@@ -14,6 +14,11 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList } from 'react-window';
 import AutoSizer from "react-virtualized-auto-sizer";
+
+var lista = [];
+lista.push(new post(1,"master","eka"));
+lista.push(new post(2, "kalle", "toka"));
+lista.push(new post(3, "master", "kolmas"));
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -41,7 +46,7 @@ function renderRow(props) {
 
     return (
         <ListItem button style={style} key={index}>
-            <ListItemText primary={`Item ${index + 1}`} />
+            <ListItemText primary={`${lista[index].getText()}`} />
         </ListItem>
     );
 }
@@ -72,11 +77,6 @@ const useStyles2 = makeStyles(theme => ({
     },
 }));
 function App() {
-
-let lista = [];
-lista.push(new post(1,"master","eka"));
-lista.push(new post(2, "kalle", "toka"));
-lista.push(new post(3, "master", "kolmas"));
   const classes = useStyles();
   const classes2 = useStyles2();
   const [value, setValue] = React.useState(0);
@@ -104,7 +104,7 @@ lista.push(new post(3, "master", "kolmas"));
           <div className={classes2.root}>
               <AutoSizer>
                   {({height, width}) => (
-                      <FixedSizeList height={height} width={width} itemSize={46} itemCount={200}>
+                      <FixedSizeList height={height} width={width} itemSize={46} itemCount={lista.length}>
                           {renderRow}
                       </FixedSizeList>
                   )}
