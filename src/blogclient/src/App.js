@@ -6,12 +6,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import PhoneIcon from '@material-ui/icons/Phone';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import ViewStreamIcon from '@material-ui/icons/ViewStream';
 import AddIcon from '@material-ui/icons/Add';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import { FixedSizeList } from 'react-window';
+import AutoSizer from "react-virtualized-auto-sizer";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -34,7 +36,20 @@ TabPanel.propTypes = {
   index: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired,
 };
+function renderRow(props) {
+    const { index, style } = props;
 
+    return (
+        <ListItem button style={style} key={index}>
+            <ListItemText primary={`Item ${index + 1}`} />
+        </ListItem>
+    );
+}
+
+renderRow.propTypes = {
+    index: PropTypes.number.isRequired,
+    style: PropTypes.object.isRequired,
+};
 function a11yProps(index) {
   return {
     id: `scrollable-force-tab-${index}`,
@@ -49,6 +64,13 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
   },
 }));
+const useStyles2 = makeStyles(theme => ({
+    root: {
+        width: '100%',
+        height: '85vh',
+        backgroundColor: theme.palette.background.paper,
+    },
+}));
 function App() {
 
 let lista = [];
@@ -56,6 +78,7 @@ lista.push(new post(1,"master","eka"));
 lista.push(new post(2, "kalle", "toka"));
 lista.push(new post(3, "master", "kolmas"));
   const classes = useStyles();
+  const classes2 = useStyles2();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -78,7 +101,15 @@ lista.push(new post(3, "master", "kolmas"));
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        Item One
+          <div className={classes2.root}>
+              <AutoSizer>
+                  {({height, width}) => (
+                      <FixedSizeList height={height} width={width} itemSize={46} itemCount={200}>
+                          {renderRow}
+                      </FixedSizeList>
+                  )}
+              </AutoSizer>
+          </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
         Item Two
