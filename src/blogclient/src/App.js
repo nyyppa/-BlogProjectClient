@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 import post from "./post";
 import PropTypes from 'prop-types';
@@ -19,11 +19,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import utils from "./utils";
 
-var help;
 var lista = [];
-lista.push(new post(1,"master","eka"));
-lista.push(new post(2, "kalle", "toka"));
-lista.push(new post(3, "master", "kolmas"));
+var suorita = true;
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -71,7 +69,21 @@ function App() {
     const classes = useStyles();
     const classes2 = useStyles2();
     const [value, setValue] = React.useState(0);
-    help = this;
+    const [, forceUpdate] = React.useReducer(x => x + 1, 0);
+    useEffect(() => {
+        if(suorita) {
+            fetch("http://localhost:8080/blogs/").then(response => response.json()).then(data => {
+                console.log("json: " + JSON.stringify(data));
+                for (const item of data) {
+                    lista.push(new post(item.id, item.author, item.text));
+                }
+                suorita = false;
+            }).then(i => {
+                console.log(lista.length);
+                forceUpdate();
+            });
+        }
+    });
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -107,8 +119,10 @@ function App() {
                                                     color="secondary"
                                                     onClick={() => {
                                                         utils.prototype.removePost(lista[index].getID());
-                                                        lista.splice(index,1);
-                                                        window.location.reload();
+                                                        setTimeout(() => {
+                                                            window.location.reload();
+                                                            suorita = true;
+                                                        }, 500);
                                                     }}
                                                     startIcon={<DeleteIcon />}
                                                 >
