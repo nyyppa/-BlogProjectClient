@@ -46,36 +46,6 @@ TabPanel.propTypes = {
   index: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired,
 };
-
-function renderRow(props) {
-    const { index} = props;
-
-    return (
-        <ListItem key={index}>
-            <ListItemText primary={`${lista[index].getText()}`} />
-            <ListItemText primary={`Author: ${lista[index].getAuthor()}`} />
-            <ListItemSecondaryAction>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => {
-                        utils.prototype.removePost(lista[index].getID());
-                        lista.splice(index,1);
-
-                    }}
-                    startIcon={<DeleteIcon />}
-                >
-                    Delete
-                </Button>
-            </ListItemSecondaryAction>
-        </ListItem>
-    );
-}
-
-renderRow.propTypes = {
-    index: PropTypes.number.isRequired,
-    style: PropTypes.object.isRequired,
-};
 function a11yProps(index) {
   return {
     id: `scrollable-force-tab-${index}`,
@@ -138,7 +108,7 @@ function App() {
                                                     onClick={() => {
                                                         utils.prototype.removePost(lista[index].getID());
                                                         lista.splice(index,1);
-                                                        this.forceUpdate();
+                                                        window.location.reload();
                                                     }}
                                                     startIcon={<DeleteIcon />}
                                                 >
