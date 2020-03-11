@@ -14,7 +14,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList } from 'react-window';
 import AutoSizer from "react-virtualized-auto-sizer";
+import Button from '@material-ui/core/Button';
+import DeleteIcon from '@material-ui/icons/Delete';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import utils from "./utils";
 
+var help;
 var lista = [];
 lista.push(new post(1,"master","eka"));
 lista.push(new post(2, "kalle", "toka"));
@@ -41,13 +46,28 @@ TabPanel.propTypes = {
   index: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired,
 };
+
 function renderRow(props) {
-    const { index, style } = props;
+    const { index} = props;
 
     return (
-        <ListItem button style={style} key={index}>
+        <ListItem key={index}>
             <ListItemText primary={`${lista[index].getText()}`} />
             <ListItemText primary={`Author: ${lista[index].getAuthor()}`} />
+            <ListItemSecondaryAction>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                        utils.prototype.removePost(lista[index].getID());
+                        lista.splice(index,1);
+
+                    }}
+                    startIcon={<DeleteIcon />}
+                >
+                    Delete
+                </Button>
+            </ListItemSecondaryAction>
         </ListItem>
     );
 }
@@ -78,45 +98,66 @@ const useStyles2 = makeStyles(theme => ({
     },
 }));
 function App() {
-  const classes = useStyles();
-  const classes2 = useStyles2();
-  const [value, setValue] = React.useState(0);
+    const classes = useStyles();
+    const classes2 = useStyles2();
+    const [value, setValue] = React.useState(0);
+    help = this;
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+    return (
+        <div className={classes.root}>
+            <AppBar position="static" color="default">
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    variant="scrollable"
+                    scrollButtons="on"
+                    indicatorColor="primary"
+                    textColor="primary"
+                    aria-label="scrollable force tabs example"
+                >
+                    <Tab label="Show posts" icon={<ViewStreamIcon />} {...a11yProps(0)} />
+                    <Tab label="Add new post" icon={<AddIcon />} {...a11yProps(1)} />
+                </Tabs>
+            </AppBar>
+            <TabPanel value={value} index={0}>
+                <div className={classes2.root}>
+                    <AutoSizer>
+                        {({height, width}) => (
+                            <FixedSizeList height={height} width={width} itemSize={200} itemCount={lista.length}>
+                                {({ index, style }) => {
+                                    return (
+                                        <ListItem key={index}>
+                                            <ListItemText primary={`${lista[index].getText()}`} />
+                                            <ListItemText primary={`Author: ${lista[index].getAuthor()}`} />
+                                            <ListItemSecondaryAction>
+                                                <Button
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    onClick={() => {
+                                                        utils.prototype.removePost(lista[index].getID());
+                                                        lista.splice(index,1);
+                                                        this.forceUpdate();
+                                                    }}
+                                                    startIcon={<DeleteIcon />}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </ListItemSecondaryAction>
+                                        </ListItem>
+                                    );
+                                }}
+                            </FixedSizeList>
+                        )}
+                    </AutoSizer>
+                </div>
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+                Item Two
+            </TabPanel>
+        </div>);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-  return (
-    <div className={classes.root}>
-      <AppBar position="static" color="default">
-        <Tabs
-            value={value}
-            onChange={handleChange}
-            variant="scrollable"
-            scrollButtons="on"
-            indicatorColor="primary"
-            textColor="primary"
-            aria-label="scrollable force tabs example"
-        >
-          <Tab label="Show posts" icon={<ViewStreamIcon />} {...a11yProps(0)} />
-          <Tab label="Add new post" icon={<AddIcon />} {...a11yProps(1)} />
-        </Tabs>
-      </AppBar>
-      <TabPanel value={value} index={0}>
-          <div className={classes2.root}>
-              <AutoSizer>
-                  {({height, width}) => (
-                      <FixedSizeList height={height} width={width} itemSize={46} itemCount={lista.length}>
-                          {renderRow}
-                      </FixedSizeList>
-                  )}
-              </AutoSizer>
-          </div>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        Item Two
-      </TabPanel>
-    </div>
-  );
 }
 
 export default App;
