@@ -109,13 +109,16 @@ function App() {
     const [, forceUpdate] = React.useReducer(x => x + 1, 0);
     const [open, setOpen] = React.useState(false);
     const [paikka, setPaikka] = React.useState(1);
+    //This call when dialog want open
     const handleClickOpen = (key) => {
         setPaikka(key);
         setOpen(true);
     };
-
+    // This call when dialog close
     const handleClose = () => {
+        //change post data from backend
         utils.prototype.addPost((paikka + 1), authorOut, textOut);
+        //load list data again
         load(false, forceUpdate);
         setOpen(false);
     };
