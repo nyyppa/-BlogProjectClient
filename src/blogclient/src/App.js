@@ -21,6 +21,8 @@ import utils from "./utils";
 import TextField from "@material-ui/core/TextField";
 import Center from 'react-center';
 import SaveIcon from '@material-ui/icons/Save';
+import SettingsIcon from '@material-ui/icons/Settings';
+import IconButton from '@material-ui/core/IconButton';
 
 var lista = [];
 var suorita = true;
@@ -136,6 +138,9 @@ function App() {
                                             <ListItemText primary={`${lista[index].getText()}`} />
                                             <ListItemText primary={`Author: ${lista[index].getAuthor()}`} />
                                             <ListItemSecondaryAction>
+                                                <IconButton color="primary" aria-label="modify">
+                                                    <SettingsIcon />
+                                                </IconButton>
                                                 <Button
                                                     variant="contained"
                                                     color="secondary"
