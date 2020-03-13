@@ -30,9 +30,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 var lista = [];
 var suorita = true;
+//text what send when create or modify post
 var textOut;
+//author what send when create or modify post
 var authorOut;
-
+//create tabpanel
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -61,7 +63,7 @@ function a11yProps(index) {
     'aria-controls': `scrollable-force-tabpanel-${index}`,
   };
 }
-
+//load data from backend
 function load(firstTime, force) {
     if(firstTime){
         fetch("http://localhost:8080/blogs/").then(response => response.json()).then(data => {
@@ -112,21 +114,33 @@ function App() {
     //This call when dialog want open
     const handleClickOpen = (key) => {
         setPaikka(key);
+        //get data and put it to variables
+        authorOut = lista[key].getAuthor();
+        textOut = lista[key].getText();
         setOpen(true);
     };
     // This call when dialog close
     const handleClose = () => {
         //change post data from backend
         utils.prototype.addPost((paikka + 1), authorOut, textOut);
-        //load list data again
-        load(false, forceUpdate);
+        //load list data again with setTimeout because fetch need time
+        setTimeout(() => {
+            load(false, forceUpdate);
+        } , 700);
         setOpen(false);
     };
+    // This call when dialog close without modify
+    const handleClose2 = () => {
+        setOpen(false);
+    };
+    //run when mount
     useEffect(() => {
+        //check if code is not run before
         if(suorita) {
             load(true, forceUpdate);
         }
     });
+    //This handle tab bar change
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -146,18 +160,21 @@ function App() {
                     <Tab label="Add new post" icon={<AddIcon />} {...a11yProps(1)} />
                 </Tabs>
             </AppBar>
+            {/* tab of post list */}
             <TabPanel value={value} index={0}>
                 <div className={classes2.root}>
                     <AutoSizer>
                         {({height, width}) => (
                             <FixedSizeList height={height} width={width} itemSize={200} itemCount={lista.length}>
                                 {({ index, style }) => {
+                                    // list item. index is place of item in list or array
                                     return (
                                         <ListItem key={index}>
                                             <ListItemText primary={`${lista[index].getText()}`} />
                                             <ListItemText primary={`Author: ${lista[index].getAuthor()}`} />
                                             <ListItemSecondaryAction>
                                                 <IconButton color="primary" aria-label="modify" onClick={() => {
+                                                    //send information of id
                                                     handleClickOpen(index);
                                                 }}>
                                                     <SettingsIcon />
@@ -167,6 +184,7 @@ function App() {
                                                     color="secondary"
                                                     onClick={() => {
                                                         utils.prototype.removePost(lista[index].getID());
+                                                        // need set timeout so fetch run before list load again
                                                         setTimeout(() => {
                                                             load(false, forceUpdate);
                                                         }, 500);
@@ -191,6 +209,7 @@ function App() {
                                 label="Author"
                                 defaultValue={authorOut}
                                 onChange={event => {
+                                    //when value change then update value of variable
                                     authorOut = event.target.value;
                                 }}
                                 fullWidth
@@ -201,12 +220,16 @@ function App() {
                                 label="Text"
                                 defaultValue={textOut}
                                 onChange={event => {
+                                    //when value change then update value of variable
                                     textOut = event.target.value;
                                 }}
                                 fullWidth
                             />
                         </DialogContent>
                         <DialogActions>
+                            <Button onClick={handleClose2} color="primary">
+                                Cancel
+                            </Button>
                             <Button onClick={handleClose} color="primary">
                                 Save
                             </Button>
@@ -214,11 +237,13 @@ function App() {
                     </Dialog>
                 </div>
             </TabPanel>
+            { /* post adding tab */}
             <TabPanel value={value} index={1}>
                 <Center>
                 <form noValidate autoComplete="off">
                     <TextField id="outlinedBasic" label="Author" variant="outlined"
                                onChange={event => {
+                                   //when value change then update value of variable
                                    authorOut = event.target.value;
                                }}
                     />
@@ -230,6 +255,7 @@ function App() {
                                rows="4"
                                variant="outlined"
                                onChange={event => {
+                                   //when value change then update value of variable
                                    textOut = event.target.value;
                                }}/>
                                <br/>
@@ -241,6 +267,7 @@ function App() {
                         startIcon={<SaveIcon />}
                         onClick={ () => {
                             utils.prototype.addNewPost(authorOut, textOut);
+                            // need set timeout so fetch run before list load again
                             setTimeout(() => {
                                 load(false, forceUpdate);
                             }, 500);
