@@ -1,14 +1,11 @@
 export default class utils {
-    removePost(id, after){
+    removePost(id){
         console.log("remove id:" + id);
-        /*
-        ongelmia
-         */
         fetch("http://localhost:8080/delete/" + id, {
             method: 'DELETE',
         });
     }
-    addPost(idIn, authorIn, textIn, after){
+    addPost(idIn, authorIn, textIn){
         const data = { id: idIn, author: authorIn, text: textIn };
         fetch("http://localhost:8080/save", {
             method: 'POST',
@@ -20,7 +17,7 @@ export default class utils {
             console.log("data send");
         });
     }
-    addNewPost(authorIn,textIn, after){
+    addNewPost(authorIn,textIn){
         const data = { author: authorIn, text: textIn };
         fetch("http://localhost:8080/save", {
             method: 'POST',

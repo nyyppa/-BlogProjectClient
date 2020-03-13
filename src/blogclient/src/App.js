@@ -23,6 +23,10 @@ import Center from 'react-center';
 import SaveIcon from '@material-ui/icons/Save';
 import SettingsIcon from '@material-ui/icons/Settings';
 import IconButton from '@material-ui/core/IconButton';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 var lista = [];
 var suorita = true;
@@ -103,6 +107,18 @@ function App() {
     const classes2 = useStyles2();
     const [value, setValue] = React.useState(0);
     const [, forceUpdate] = React.useReducer(x => x + 1, 0);
+    const [open, setOpen] = React.useState(false);
+    const [paikka, setPaikka] = React.useState(1);
+    const handleClickOpen = (key) => {
+        setPaikka(key);
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        utils.prototype.addPost((paikka + 1), authorOut, textOut);
+        load(false, forceUpdate);
+        setOpen(false);
+    };
     useEffect(() => {
         if(suorita) {
             load(true, forceUpdate);
@@ -138,7 +154,9 @@ function App() {
                                             <ListItemText primary={`${lista[index].getText()}`} />
                                             <ListItemText primary={`Author: ${lista[index].getAuthor()}`} />
                                             <ListItemSecondaryAction>
-                                                <IconButton color="primary" aria-label="modify">
+                                                <IconButton color="primary" aria-label="modify" onClick={() => {
+                                                    handleClickOpen(index);
+                                                }}>
                                                     <SettingsIcon />
                                                 </IconButton>
                                                 <Button
@@ -161,6 +179,36 @@ function App() {
                             </FixedSizeList>
                         )}
                     </AutoSizer>
+                    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">Modify this blog post</DialogTitle>
+                        <DialogContent>
+                            <TextField
+                                margin="dense"
+                                id="modifyAuthor"
+                                label="Author"
+                                defaultValue={authorOut}
+                                onChange={event => {
+                                    authorOut = event.target.value;
+                                }}
+                                fullWidth
+                            />
+                            <TextField
+                                margin="dense"
+                                id="modifyText"
+                                label="Text"
+                                defaultValue={textOut}
+                                onChange={event => {
+                                    textOut = event.target.value;
+                                }}
+                                fullWidth
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleClose} color="primary">
+                                Save
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
                 </div>
             </TabPanel>
             <TabPanel value={value} index={1}>
