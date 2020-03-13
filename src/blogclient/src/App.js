@@ -18,9 +18,14 @@ import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import utils from "./utils";
+import TextField from "@material-ui/core/TextField";
+import Center from 'react-center';
+import SaveIcon from '@material-ui/icons/Save';
 
 var lista = [];
 var suorita = true;
+var textOut;
+var authorOut;
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -138,7 +143,39 @@ function App() {
                 </div>
             </TabPanel>
             <TabPanel value={value} index={1}>
-                Item Two
+                <Center>
+                <form noValidate autoComplete="off">
+                    <TextField id="outlinedBasic" label="Author" variant="outlined"
+                               onChange={event => {
+                                   authorOut = event.target.value;
+                               }}
+                    />
+                    <br/>
+                    <br/>
+                    <TextField id="outlinedMultiline"
+                               label="Text"
+                               multiline
+                               rows="4"
+                               variant="outlined"
+                               onChange={event => {
+                                   textOut = event.target.value;
+                               }}/>
+                               <br/>
+                               <br/>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        startIcon={<SaveIcon />}
+                        onClick={ () => {
+                            utils.prototype.addNewPost(authorOut, textOut);
+                            }
+                        }
+                    >
+                        Save
+                    </Button>
+                </form>
+                </Center>
             </TabPanel>
         </div>);
 
