@@ -56,6 +56,32 @@ function a11yProps(index) {
   };
 }
 
+function load(firstTime, force) {
+    if(firstTime){
+        fetch("http://localhost:8080/blogs/").then(response => response.json()).then(data => {
+            console.log("json: " + JSON.stringify(data));
+            for (const item of data) {
+                lista.push(new post(item.id, item.author, item.text));
+            }
+            suorita = false;
+        }).then(i => {
+            console.log(lista.length);
+            force();
+        });
+    } else{
+        fetch("http://localhost:8080/blogs/").then(response => response.json()).then(data => {
+            console.log("json: " + JSON.stringify(data));
+            lista = [];
+            for (const item of data) {
+                lista.push(new post(item.id, item.author, item.text));
+            }
+        }).then(i => {
+            console.log(lista.length);
+            force();
+        });
+    }
+}
+
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -77,16 +103,7 @@ function App() {
     const [, forceUpdate] = React.useReducer(x => x + 1, 0);
     useEffect(() => {
         if(suorita) {
-            fetch("http://localhost:8080/blogs/").then(response => response.json()).then(data => {
-                console.log("json: " + JSON.stringify(data));
-                for (const item of data) {
-                    lista.push(new post(item.id, item.author, item.text));
-                }
-                suorita = false;
-            }).then(i => {
-                console.log(lista.length);
-                forceUpdate();
-            });
+            load(true, forceUpdate);
         }
     });
     const handleChange = (event, newValue) => {
@@ -125,8 +142,7 @@ function App() {
                                                     onClick={() => {
                                                         utils.prototype.removePost(lista[index].getID());
                                                         setTimeout(() => {
-                                                            window.location.reload();
-                                                            suorita = true;
+                                                            load(false, forceUpdate);
                                                         }, 500);
                                                     }}
                                                     startIcon={<DeleteIcon />}
@@ -169,6 +185,9 @@ function App() {
                         startIcon={<SaveIcon />}
                         onClick={ () => {
                             utils.prototype.addNewPost(authorOut, textOut);
+                            setTimeout(() => {
+                                load(false, forceUpdate);
+                            }, 500);
                             }
                         }
                     >
