@@ -11,7 +11,6 @@ import Box from '@material-ui/core/Box';
 import ViewStreamIcon from '@material-ui/icons/ViewStream';
 import AddIcon from '@material-ui/icons/Add';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList } from 'react-window';
 import AutoSizer from "react-virtualized-auto-sizer";
 import Button from '@material-ui/core/Button';
@@ -27,6 +26,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import ListItemText from '@material-ui/core/ListItemText';
 
 var lista = [];
 var suorita = true;
@@ -113,7 +113,7 @@ function App() {
     const [paikka, setPaikka] = React.useState(1);
     //This call when dialog want open
     const handleClickOpen = (key) => {
-        setPaikka(key);
+        setPaikka(lista[key].getID());
         //get data and put it to variables
         authorOut = lista[key].getAuthor();
         textOut = lista[key].getText();
@@ -122,7 +122,7 @@ function App() {
     // This call when dialog close
     const handleClose = () => {
         //change post data from backend
-        utils.prototype.addPost((paikka + 1), authorOut, textOut);
+        utils.prototype.addPost((paikka), authorOut, textOut);
         //load list data again with setTimeout because fetch need time
         setTimeout(() => {
             load(false, forceUpdate);
@@ -165,41 +165,49 @@ function App() {
                 <div className={classes2.root}>
                     <AutoSizer>
                         {({height, width}) => (
-                            <FixedSizeList height={height} width={width} itemSize={200} itemCount={lista.length}>
+                            <FixedSizeList height={height} width={width} itemSize={500} itemCount={lista.length}>
                                 {({ index, style }) => {
                                     // list item. index is place of item in list or array
                                     return (
                                         <ListItem key={index}>
-                                            <ListItemText primary={`${lista[index].getText()}`} />
-                                            <ListItemText primary={`Author: ${lista[index].getAuthor()}`} />
-                                            <ListItemSecondaryAction>
-                                                <IconButton color="primary" aria-label="modify" onClick={() => {
-                                                    //send information of id
-                                                    handleClickOpen(index);
-                                                }}>
-                                                    <SettingsIcon />
-                                                </IconButton>
-                                                <Button
-                                                    variant="contained"
-                                                    color="secondary"
-                                                    onClick={() => {
-                                                        utils.prototype.removePost(lista[index].getID());
-                                                        // need set timeout so fetch run before list load again
-                                                        setTimeout(() => {
-                                                            load(false, forceUpdate);
-                                                        }, 500);
-                                                    }}
-                                                    startIcon={<DeleteIcon />}
-                                                >
-                                                    Delete
-                                                </Button>
-                                            </ListItemSecondaryAction>
+                                                <Box width={1}>
+                                                        <ListItemSecondaryAction>
+                                                        <IconButton color="primary" aria-label="modify" onClick={() => {
+                                                            //send information of id
+                                                            handleClickOpen(index);
+                                                        }}>
+                                                            <SettingsIcon />
+                                                        </IconButton>
+                                                        <Button
+                                                            variant="contained"
+                                                            color="secondary"
+                                                            onClick={() => {
+                                                                utils.prototype.removePost(lista[index].getID());
+                                                                // need set timeout so fetch run before list load again
+                                                                setTimeout(() => {
+                                                                    load(false, forceUpdate);
+                                                                }, 500);
+                                                            }}
+                                                            startIcon={<DeleteIcon />}
+                                                        >
+                                                            Delete
+                                                        </Button>
+                                                        </ListItemSecondaryAction>
+                                                        <br/>
+                                                        <ListItemText>
+                                                            <h3>Author: {lista[index].getAuthor()}</h3>
+                                                        </ListItemText>
+                                                    <ListItemText>
+                                                        <p>{lista[index].getText()}</p>
+                                                    </ListItemText>
+                                                </Box>
                                         </ListItem>
                                     );
                                 }}
                             </FixedSizeList>
                         )}
                     </AutoSizer>
+                    {/* post modify */}
                     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                         <DialogTitle id="form-dialog-title">Modify this blog post</DialogTitle>
                         <DialogContent>
