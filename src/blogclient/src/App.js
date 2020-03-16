@@ -194,12 +194,10 @@ function App() {
                                                         </Button>
                                                         </ListItemSecondaryAction>
                                                         <br/>
-                                                        <ListItemText>
-                                                            <h3>Author: {lista[index].getAuthor()}</h3>
+                                                        <ListItemText primary={<h3>Author: {lista[index].getAuthor()}</h3>}
+                                                        secondary={<p>{lista[index].getText()}</p>}
+                                                        >
                                                         </ListItemText>
-                                                    <ListItemText>
-                                                        <p>{lista[index].getText()}</p>
-                                                    </ListItemText>
                                                 </Box>
                                         </ListItem>
                                     );
@@ -224,6 +222,7 @@ function App() {
                             />
                             <TextField
                                 margin="dense"
+                                multiline
                                 id="modifyText"
                                 label="Text"
                                 defaultValue={textOut}
