@@ -34,6 +34,8 @@ var suorita = true;
 var textOut;
 //author what send when create or modify post
 var authorOut;
+//tags
+var tags;
 //create tabpanel
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -69,7 +71,7 @@ function load(firstTime, force) {
         fetch("http://localhost:8080/blogs/").then(response => response.json()).then(data => {
             console.log("json: " + JSON.stringify(data));
             for (const item of data) {
-                lista.push(new post(item.id, item.author, item.text));
+                lista.push(new post(item.id, item.author, item.text, item.tags));
             }
             suorita = false;
         }).then(i => {
@@ -81,7 +83,7 @@ function load(firstTime, force) {
             console.log("json: " + JSON.stringify(data));
             lista = [];
             for (const item of data) {
-                lista.push(new post(item.id, item.author, item.text));
+                lista.push(new post(item.id, item.author, item.text, item.tags));
             }
         }).then(i => {
             console.log(lista.length);
@@ -117,12 +119,13 @@ function App() {
         //get data and put it to variables
         authorOut = lista[key].getAuthor();
         textOut = lista[key].getText();
+        tags = lista[key].getTags();
         setOpen(true);
     };
     // This call when dialog close
     const handleClose = () => {
         //change post data from backend
-        utils.prototype.addPost((paikka), authorOut, textOut);
+        utils.prototype.addPostWithTags((paikka), authorOut, textOut, tags);
         //load list data again with setTimeout because fetch need time
         setTimeout(() => {
             load(false, forceUpdate);
@@ -267,13 +270,23 @@ function App() {
                                }}/>
                                <br/>
                                <br/>
+                               <TextField id="tags"
+                                          label="Tags"
+                                          variant="outlined"
+                                          onChange={event => {
+                                            let valiaikainen = event.target.value;
+                                            tags = valiaikainen.split(",");
+                                          }}
+                                          />
+                                          <br/>
+                                          <br/>
                     <Button
                         variant="contained"
                         color="primary"
                         size="large"
                         startIcon={<SaveIcon />}
                         onClick={ () => {
-                            utils.prototype.addNewPost(authorOut, textOut);
+                            utils.prototype.addNewPost(authorOut, textOut, tags);
                             // need set timeout so fetch run before list load again
                             setTimeout(() => {
                                 load(false, forceUpdate);

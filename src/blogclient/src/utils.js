@@ -19,6 +19,22 @@ export default class utils {
             console.log("data send");
         });
     }
+    addPostWithTags(idIn, authorIn, textIn, tag){
+        if(tag.length >= 2) {
+            const data = {id: idIn, author: authorIn, text: textIn, tags: tag};
+            fetch("http://localhost:8080/save", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            }).then(response => {
+                console.log("data send");
+            });
+        } else{
+            alert("add least 2 tags. (separate tags with ,)");
+        }
+    }
     //add new post to backend
     addNewPost(authorIn,textIn){
         const data = { author: authorIn, text: textIn };
@@ -31,5 +47,22 @@ export default class utils {
         }).then(response => {
             console.log("data send");
         });
+    }
+    //add new post to backend with tags
+    addNewPost(authorIn,textIn, tag){
+        if(tag.length >= 2) {
+            const data = {author: authorIn, text: textIn, tags: tag};
+            fetch("http://localhost:8080/save", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            }).then(response => {
+                console.log("data send");
+            });
+        } else{
+            alert("add least 2 tags. (separate tags with ,)");
+        }
     }
 }

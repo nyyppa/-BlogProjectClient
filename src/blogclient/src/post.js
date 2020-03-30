@@ -1,8 +1,9 @@
 export default class Post {
-    constructor(id, author, text) {
+    constructor(id, author, text, tags) {
         this.ID = id;
         this.AUTHOR = author;
         this.TEXT = text;
+        this.TAGS = tags;
     }
     getID(){
         return this.ID;
@@ -15,5 +16,11 @@ export default class Post {
     }
     setText(uusi){
         this.TEXT = uusi;
+    }
+    getTags(){
+        return this.TAGS;
+    }
+    setTags(uusi){
+        this.TAGS = uusi;
     }
 }
