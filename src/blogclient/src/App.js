@@ -27,6 +27,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ListItemText from '@material-ui/core/ListItemText';
+import SearchIcon from '@material-ui/icons/Search';
 
 var lista = [];
 var suorita = true;
@@ -161,6 +162,7 @@ function App() {
                 >
                     <Tab label="Show posts" icon={<ViewStreamIcon />} {...a11yProps(0)} />
                     <Tab label="Add new post" icon={<AddIcon />} {...a11yProps(1)} />
+                    <Tab label="Search" icon={<SearchIcon />} {...a11yProps(2)}/>
                 </Tabs>
             </AppBar>
             {/* tab of post list */}
@@ -308,6 +310,9 @@ function App() {
                     </Button>
                 </form>
                 </Center>
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+                <h1>testi</h1>
             </TabPanel>
         </div>);
 
