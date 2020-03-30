@@ -28,15 +28,21 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ListItemText from '@material-ui/core/ListItemText';
 import SearchIcon from '@material-ui/icons/Search';
+import CommentIcon from '@material-ui/icons/Comment';
+import commentData from "./commentData";
 
 var lista = [];
+var comments = [];
 var suorita = true;
 //text what send when create or modify post
 var textOut;
 //author what send when create or modify post
 var authorOut;
+//comment
+var commentText;
+var commentAuthor;
 //tags
-var tags;
+var tags = [];
 //create tabpanel
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -113,6 +119,7 @@ function App() {
     const [value, setValue] = React.useState(0);
     const [, forceUpdate] = React.useReducer(x => x + 1, 0);
     const [open, setOpen] = React.useState(false);
+    const [comment, setComment] = React.useState(false);
     const [paikka, setPaikka] = React.useState(1);
     //This call when dialog want open
     const handleClickOpen = (key) => {
@@ -132,6 +139,24 @@ function App() {
             load(false, forceUpdate);
         } , 700);
         setOpen(false);
+    };
+    //This call when dialog of comment want open
+    const handleClickOpenComment = (key) => {
+        setPaikka(lista[key].getID());
+        //get comments
+
+        //open
+        setComment(true);
+    };
+    const handleCloseComment = () => {
+      //send
+        let help = new commentData(commentAuthor, commentText);
+      //close
+      setComment(false);
+    };
+    const handleCloseComment2 = () => {
+        //close
+        setComment(false);
     };
     // This call when dialog close without modify
     const handleClose2 = () => {
@@ -177,12 +202,20 @@ function App() {
                                         <ListItem key={index}>
                                                 <Box width={1}>
                                                         <ListItemSecondaryAction>
+                                                            {/* open modify view */}
                                                         <IconButton color="primary" aria-label="modify" onClick={() => {
                                                             //send information of id
                                                             handleClickOpen(index);
                                                         }}>
                                                             <SettingsIcon />
                                                         </IconButton>
+                                                            { /* open comment view */}
+                                                            <IconButton color="primary" aria-label="comment" onClick={() => {
+                                                                handleClickOpenComment(index);
+                                                            }}>
+                                                                <CommentIcon />
+                                                            </IconButton>
+                                                            {/* delete post from backend */}
                                                         <Button
                                                             variant="contained"
                                                             color="secondary"
@@ -200,7 +233,7 @@ function App() {
                                                         </ListItemSecondaryAction>
                                                         <br/>
                                                         <ListItemText primary={<h3>Author: {lista[index].getAuthor()}</h3>}
-                                                        secondary={<p>{lista[index].getText()}</p>}
+                                                        secondary={lista[index].getText()}
                                                         >
                                                         </ListItemText>
                                                 </Box>
@@ -254,6 +287,54 @@ function App() {
                             </Button>
                             <Button onClick={handleClose} color="primary">
                                 Save
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                    {/* comment view */}
+                    <Dialog open={comment} onClose={handleCloseComment} aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">Comments</DialogTitle>
+                        <DialogContent>
+                            {/* list of comments */}
+                            <ul>
+                                {() => {
+                                    let helpList = [];
+                                    for(let lap=0; lap < comments.length;lap++){
+                                        helpList.push(<li>Author: {comments[lap].getAuthor()} comment: {comments[lap].getText()}</li>)
+                                    }
+                                    return helpList;
+                                }}
+                            </ul>
+                            <br/>
+                            <br />
+                            <TextField
+                                margin="dense"
+                                id="modifyCommets"
+                                label="Text"
+                                defaultValue={commentText}
+                                onChange={event => {
+                                    commentText = event.target.value;
+                                }}
+                                fullWidth
+                            />
+                            <br />
+                            <br />
+                            <TextField
+                                margin="dense"
+                                id="modifyCommentAuthor"
+                                label="Author"
+                                defaultValue={commentAuthor}
+                                onChange={event => {
+                                    commentAuthor = event.target.value;
+                                }}
+                                fullWidth
+                                />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleCloseComment2} color="primary">
+                                Close
+                            </Button>
+                            <Button onClick={handleCloseComment} color="primary">
+                                Add new comment
                             </Button>
                         </DialogActions>
                     </Dialog>
