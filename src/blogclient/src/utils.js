@@ -6,22 +6,11 @@ export default class utils {
             method: 'DELETE',
         });
     }
-    //modify post from backend
-    addPost(idIn, authorIn, textIn){
-        const data = { id: idIn, author: authorIn, text: textIn };
-        fetch("http://localhost:8080/save", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        }).then(response => {
-            console.log("data send");
-        });
-    }
+    //modify backend post
     addPostWithTags(idIn, authorIn, textIn, tag){
         if(tag.length >= 2) {
             const data = {id: idIn, author: authorIn, text: textIn, tags: tag};
+            console.log("data: " + JSON.stringify(data));
             fetch("http://localhost:8080/save", {
                 method: 'POST',
                 headers: {
@@ -35,23 +24,11 @@ export default class utils {
             alert("add least 2 tags. (separate tags with ,)");
         }
     }
-    //add new post to backend
-    addNewPost(authorIn,textIn){
-        const data = { author: authorIn, text: textIn };
-        fetch("http://localhost:8080/save", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        }).then(response => {
-            console.log("data send");
-        });
-    }
     //add new post to backend with tags
     addNewPost(authorIn,textIn, tag){
         if(tag.length >= 2) {
             const data = {author: authorIn, text: textIn, tags: tag};
+            console.log("data: " + JSON.stringify(data));
             fetch("http://localhost:8080/save", {
                 method: 'POST',
                 headers: {

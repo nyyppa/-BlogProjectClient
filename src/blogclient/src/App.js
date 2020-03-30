@@ -235,6 +235,16 @@ function App() {
                                 }}
                                 fullWidth
                             />
+                            <TextField
+                                margin="dense"
+                                id="modifyTags"
+                                label="Tags"
+                                defaultValue={tags}
+                                onChange={event => {
+                                    tags = event.target.value;
+                                }}
+                                fullWidth
+                                />
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={handleClose2} color="primary">
