@@ -14,18 +14,10 @@ import ListItem from '@material-ui/core/ListItem';
 import { FixedSizeList } from 'react-window';
 import AutoSizer from "react-virtualized-auto-sizer";
 import Button from '@material-ui/core/Button';
-import DeleteIcon from '@material-ui/icons/Delete';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import utils from "./utils";
 import TextField from "@material-ui/core/TextField";
 import Center from 'react-center';
 import SaveIcon from '@material-ui/icons/Save';
-import SettingsIcon from '@material-ui/icons/Settings';
-import IconButton from '@material-ui/core/IconButton';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import ListItemText from '@material-ui/core/ListItemText';
 import SearchIcon from '@material-ui/icons/Search';
 
@@ -112,32 +104,6 @@ function App() {
     const classes2 = useStyles2();
     const [value, setValue] = React.useState(0);
     const [, forceUpdate] = React.useReducer(x => x + 1, 0);
-    const [open, setOpen] = React.useState(false);
-    const [paikka, setPaikka] = React.useState(0);
-    //This call when dialog want open
-    const handleClickOpen = (key) => {
-        setPaikka(lista[key].getID());
-        console.log("paikka: " + paikka);
-        //get data and put it to variables
-        authorOut = lista[key].getAuthor();
-        textOut = lista[key].getText();
-        tags = lista[key].getTags();
-        setOpen(true);
-    };
-    // This call when dialog close
-    const handleClose = () => {
-        //change post data from backend
-        utils.prototype.addPostWithTags(paikka, authorOut, textOut, tags);
-        //load list data again with setTimeout because fetch need time
-        setTimeout(() => {
-            load(false, forceUpdate);
-        } , 700);
-        setOpen(false);
-    };
-    // This call when dialog close without modify
-    const handleClose2 = () => {
-        setOpen(false);
-    };
     //run when mount
     useEffect(() => {
         //check if code is not run before
@@ -177,31 +143,6 @@ function App() {
                                     return (
                                         <ListItem key={index}>
                                                 <Box width={1}>
-                                                        <ListItemSecondaryAction>
-                                                            {/* open modify view */}
-                                                        <IconButton color="primary" aria-label="modify" onClick={() => {
-                                                            //send information of id
-                                                            handleClickOpen(index);
-                                                        }}>
-                                                            <SettingsIcon />
-                                                        </IconButton>
-                                                            {/* delete post from backend */}
-                                                        <Button
-                                                            variant="contained"
-                                                            color="secondary"
-                                                            onClick={() => {
-                                                                utils.prototype.removePost(lista[index].getID());
-                                                                // need set timeout so fetch run before list load again
-                                                                setTimeout(() => {
-                                                                    load(false, forceUpdate);
-                                                                }, 500);
-                                                            }}
-                                                            startIcon={<DeleteIcon />}
-                                                        >
-                                                            Delete
-                                                        </Button>
-                                                        </ListItemSecondaryAction>
-                                                        <br/>
                                                         <ListItemText primary={<h3>Author: {lista[index].getAuthor()}</h3>}
                                                         secondary={lista[index].getText()}
                                                         >
@@ -213,53 +154,6 @@ function App() {
                             </FixedSizeList>
                         )}
                     </AutoSizer>
-                    {/* post modify */}
-                    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title">Modify this blog post</DialogTitle>
-                        <DialogContent>
-                            <TextField
-                                margin="dense"
-                                id="modifyAuthor"
-                                label="Author"
-                                defaultValue={authorOut}
-                                onChange={event => {
-                                    //when value change then update value of variable
-                                    authorOut = event.target.value;
-                                }}
-                                fullWidth
-                            />
-                            <TextField
-                                margin="dense"
-                                multiline
-                                id="modifyText"
-                                label="Text"
-                                defaultValue={textOut}
-                                onChange={event => {
-                                    //when value change then update value of variable
-                                    textOut = event.target.value;
-                                }}
-                                fullWidth
-                            />
-                            <TextField
-                                margin="dense"
-                                id="modifyTags"
-                                label="Tags"
-                                onChange={event => {
-                                    let valiaikainen = event.target.value;
-                                    tags = valiaikainen.split(",");
-                                }}
-                                fullWidth
-                                />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleClose2} color="primary">
-                                Cancel
-                            </Button>
-                            <Button onClick={handleClose} color="primary">
-                                Save
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
                 </div>
             </TabPanel>
             { /* post adding tab */}

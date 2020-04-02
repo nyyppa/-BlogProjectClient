@@ -1,9 +1,26 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import post from "./post";
+import Button from '@material-ui/core/Button';
+import DeleteIcon from '@material-ui/icons/Delete';
+import utils from "./utils";
+import IconButton from "@material-ui/core/IconButton";
+import SettingsIcon from "@material-ui/icons/Settings";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import TextField from "@material-ui/core/TextField";
+import DialogActions from "@material-ui/core/DialogActions";
 
 var blogPost;
 var suorita = false;
+var nayta = false;
+//text what send when create or modify post
+var textOut;
+//author what send when create or modify post
+var authorOut;
+//tags
+var tags = [];
 
 export default class ShowOne extends React.Component{
     constructor(props) {
@@ -14,9 +31,31 @@ export default class ShowOne extends React.Component{
         const blog  = this.props.match.params.blog;
         console.log("ShowOne data: " + blog);
         suorita = true;
-        this.setState({ id: blog});
+        this.setState({ id: blog, open: false});
     }
     render() {
+        const handleClickOpen = () => {
+            //get data and put it to variables
+            authorOut = blogPost.getAuthor();
+            textOut = blogPost.getText();
+            tags = blogPost.getTags();
+            this.setState({open: true});
+        };
+        // This call when dialog close
+        const handleClose = () => {
+            //change post data from backend
+            utils.prototype.addPostWithTags(blogPost.getID(), authorOut, textOut, tags);
+            //load list data again with setTimeout because fetch need time
+            setTimeout(() => {
+                suorita = true;
+                nayta = false;
+                this.setState({open: false});
+            } , 700);
+        };
+        // This call when dialog close without modify
+        const handleClose2 = () => {
+            this.setState({open: false});
+        };
         if(suorita) {
             let ids = this.state.id;
             fetch("http://localhost:8080/blogs/" + ids).then(response => response.json()).then(data => {
@@ -24,18 +63,96 @@ export default class ShowOne extends React.Component{
                 blogPost = new post(data.blogId, data.author, data.text, data.tags);
             }).then(i => {
                 suorita = false;
+                nayta = true;
                 this.setState({id: ids});
             });
         }
-        return (<div>
-            <Grid container spacing={3}>
-                <Grid item xs={8}>
-                    teksti
+        if(nayta) {
+            return (<div>
+                <Grid container spacing={3}>
+                    <Grid item xs={8}>
+                        {blogPost.getText()}
+                    </Grid>
+                    <Grid item xs={4}>
+                        <h2>Author: {blogPost.getAuthor()}</h2>
+                        <br/>
+                        {/* open modify view */}
+                        <IconButton color="primary" aria-label="modify" onClick={() => {
+                            //send information of id
+                            handleClickOpen();
+                        }}>
+                            <SettingsIcon />
+                        </IconButton>
+                        <br/>
+                        {/* delete post from backend */}
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => {
+                                utils.prototype.removePost(blogPost.getID());
+                                setTimeout(() => {
+                                    window.location.assign("../deletion");
+                                }, 1000);
+                            }}
+                            startIcon={<DeleteIcon />}
+                        >
+                            Delete
+                        </Button>
+                    </Grid>
                 </Grid>
-                <Grid item xs={4}>
-                    tiedot
+                <Grid container spacing={3}>
+
                 </Grid>
-            </Grid>
-        </div>);
+                {/* post modify */}
+                <Dialog open={this.state.open} onClose={handleClose} aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">Modify this blog post</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            margin="dense"
+                            id="modifyAuthor"
+                            label="Author"
+                            defaultValue={authorOut}
+                            onChange={event => {
+                                //when value change then update value of variable
+                                authorOut = event.target.value;
+                            }}
+                            fullWidth
+                        />
+                        <TextField
+                            margin="dense"
+                            multiline
+                            id="modifyText"
+                            label="Text"
+                            defaultValue={textOut}
+                            onChange={event => {
+                                //when value change then update value of variable
+                                textOut = event.target.value;
+                            }}
+                            fullWidth
+                        />
+                        <TextField
+                            margin="dense"
+                            id="modifyTags"
+                            label="Tags"
+                            onChange={event => {
+                                let valiaikainen = event.target.value;
+                                tags = valiaikainen.split(",");
+                            }}
+                            fullWidth
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose2} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={handleClose} color="primary">
+                            Save
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>);
+        } else{
+            return (<div><h1>Downloading...</h1></div>);
+        }
     }
 }
