@@ -28,11 +28,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ListItemText from '@material-ui/core/ListItemText';
 import SearchIcon from '@material-ui/icons/Search';
-import CommentIcon from '@material-ui/icons/Comment';
-import commentData from "./commentData";
 
 var lista = [];
-var comments = [];
 var suorita = true;
 //text what send when create or modify post
 var textOut;
