@@ -29,6 +29,7 @@ var textOut;
 var authorOut;
 //tags
 var tags = [];
+var maxShowText = 10;
 //create tabpanel
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -99,6 +100,10 @@ const useStyles2 = makeStyles(theme => ({
         backgroundColor: theme.palette.background.paper,
     },
 }));
+//open blog post
+const openBlog = (key) =>{
+    window.location.assign("../show/" + key);
+};
 function App() {
     const classes = useStyles();
     const classes2 = useStyles2();
@@ -140,11 +145,17 @@ function App() {
                             <FixedSizeList height={height} width={width} itemSize={500} itemCount={lista.length}>
                                 {({ index, style }) => {
                                     // list item. index is place of item in list or array
+                                    let h = lista[index].getText();
+                                    let o = "";
+                                    for(let lap=0; lap < maxShowText; lap++){
+                                        o += h.charAt(lap);
+                                    }
+                                    o += "...";
+                                    let i = lista[index].getID();
                                     return (
-                                        <ListItem key={index}>
+                                        <ListItem key={index} onClick={() => openBlog(i)} style={{cursor: "pointer"}}>
                                                 <Box width={1}>
-                                                        <ListItemText primary={<h3>Author: {lista[index].getAuthor()}</h3>}
-                                                        secondary={lista[index].getText()}
+                                                        <ListItemText primary={o}
                                                         >
                                                         </ListItemText>
                                                 </Box>
