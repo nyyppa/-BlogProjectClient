@@ -7,7 +7,7 @@ import {Route, Link, BrowserRouter} from 'react-router-dom';
 import ShowOne from "./ShowOne";
 
 const maini = () => <App/>;
-const posting = () => <ShowOne/>;
+const posting = (props) => <ShowOne {...props}/>;
 class Help extends React.Component{
     render() {
         return (
