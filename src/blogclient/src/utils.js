@@ -9,7 +9,11 @@ export default class utils {
     //modify backend post
     addPostWithTags(idIn, authorIn, textIn, tag){
         if(tag.length >= 2) {
-            const data = {id: idIn, author: authorIn, text: textIn, tags: tag};
+            let vali = [];
+            for(let lap=0; lap < tag.length; lap++){
+                vali.push({tagId : tag[lap]});
+            }
+            const data = {id: idIn, author: authorIn, text: textIn, tags: vali};
             console.log("data: " + JSON.stringify(data));
             fetch("http://localhost:8080/save", {
                 method: 'POST',
@@ -27,7 +31,11 @@ export default class utils {
     //add new post to backend with tags
     addNewPost(authorIn,textIn, tag){
         if(tag.length >= 2) {
-            const data = {author: authorIn, text: textIn, tags: tag};
+            let vali = [];
+            for(let lap=0; lap < tag.length; lap++){
+                vali.push({tagId : tag[lap]});
+            }
+            const data = {author: authorIn, text: textIn, tags: vali};
             console.log("data: " + JSON.stringify(data));
             fetch("http://localhost:8080/save", {
                 method: 'POST',

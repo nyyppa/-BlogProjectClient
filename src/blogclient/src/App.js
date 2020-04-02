@@ -274,7 +274,16 @@ function App() {
                                 margin="dense"
                                 id="modifyTags"
                                 label="Tags"
-                                defaultValue={tags}
+                                defaultValue={() =>{
+                                    let outt = "";
+                                    for(let lap=0; lap < (tags.length - 1); lap++){
+                                        outt += tags[lap] + ",";
+                                    }
+                                    if(tags.length > 0){
+                                        outt += tags[tags.length - 1];
+                                    }
+                                    return outt;
+                                }}
                                 onChange={event => {
                                     tags = event.target.value;
                                 }}
