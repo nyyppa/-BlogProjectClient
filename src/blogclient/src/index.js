@@ -3,8 +3,23 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import {Route, Link, BrowserRouter} from 'react-router-dom';
+import ShowOne from "./ShowOne";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const maini = () => <App/>;
+const posting = () => <ShowOne/>;
+class Help extends React.Component{
+    render() {
+        return (
+          <BrowserRouter>
+            <Route exact={true} path="/" component={maini}/>
+            <Route path="/show/:blog" component={posting} />
+          </BrowserRouter>
+        );
+    }
+}
+
+ReactDOM.render(<Help />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

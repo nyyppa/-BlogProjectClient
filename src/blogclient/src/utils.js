@@ -10,10 +10,10 @@ export default class utils {
     addPostWithTags(idIn, authorIn, textIn, tag){
         if(tag.length >= 2) {
             let vali = [];
-            for(let lap=0; lap < tag.length; lap++){
-                vali.push({tagId : tag[lap]});
+            for(let l=0; l < tag.length; l++){
+                vali.push({tagId : tag[l]});
             }
-            const data = {id: idIn, author: authorIn, text: textIn, tags: vali};
+            const data = {blogId: idIn, author: authorIn, text: textIn, tags: vali};
             console.log("data: " + JSON.stringify(data));
             fetch("http://localhost:8080/save", {
                 method: 'POST',

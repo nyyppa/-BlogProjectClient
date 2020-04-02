@@ -38,9 +38,6 @@ var suorita = true;
 var textOut;
 //author what send when create or modify post
 var authorOut;
-//comment
-var commentText;
-var commentAuthor;
 //tags
 var tags = [];
 //create tabpanel
@@ -78,7 +75,7 @@ function load(firstTime, force) {
         fetch("http://localhost:8080/blogs/").then(response => response.json()).then(data => {
             console.log("json: " + JSON.stringify(data));
             for (const item of data) {
-                lista.push(new post(item.id, item.author, item.text, item.tags));
+                lista.push(new post(item.blogId, item.author, item.text, item.tags));
             }
             suorita = false;
         }).then(i => {
@@ -90,7 +87,7 @@ function load(firstTime, force) {
             console.log("json: " + JSON.stringify(data));
             lista = [];
             for (const item of data) {
-                lista.push(new post(item.id, item.author, item.text, item.tags));
+                lista.push(new post(item.blogId, item.author, item.text, item.tags));
             }
         }).then(i => {
             console.log(lista.length);
@@ -119,11 +116,11 @@ function App() {
     const [value, setValue] = React.useState(0);
     const [, forceUpdate] = React.useReducer(x => x + 1, 0);
     const [open, setOpen] = React.useState(false);
-    const [comment, setComment] = React.useState(false);
-    const [paikka, setPaikka] = React.useState(1);
+    const [paikka, setPaikka] = React.useState(0);
     //This call when dialog want open
     const handleClickOpen = (key) => {
         setPaikka(lista[key].getID());
+        console.log("paikka: " + paikka);
         //get data and put it to variables
         authorOut = lista[key].getAuthor();
         textOut = lista[key].getText();
@@ -133,30 +130,12 @@ function App() {
     // This call when dialog close
     const handleClose = () => {
         //change post data from backend
-        utils.prototype.addPostWithTags((paikka), authorOut, textOut, tags);
+        utils.prototype.addPostWithTags(paikka, authorOut, textOut, tags);
         //load list data again with setTimeout because fetch need time
         setTimeout(() => {
             load(false, forceUpdate);
         } , 700);
         setOpen(false);
-    };
-    //This call when dialog of comment want open
-    const handleClickOpenComment = (key) => {
-        setPaikka(lista[key].getID());
-        //get comments
-
-        //open
-        setComment(true);
-    };
-    const handleCloseComment = () => {
-      //send
-        let help = new commentData(commentAuthor, commentText);
-      //close
-      setComment(false);
-    };
-    const handleCloseComment2 = () => {
-        //close
-        setComment(false);
     };
     // This call when dialog close without modify
     const handleClose2 = () => {
@@ -209,12 +188,6 @@ function App() {
                                                         }}>
                                                             <SettingsIcon />
                                                         </IconButton>
-                                                            { /* open comment view */}
-                                                            <IconButton color="primary" aria-label="comment" onClick={() => {
-                                                                handleClickOpenComment(index);
-                                                            }}>
-                                                                <CommentIcon />
-                                                            </IconButton>
                                                             {/* delete post from backend */}
                                                         <Button
                                                             variant="contained"
@@ -274,18 +247,9 @@ function App() {
                                 margin="dense"
                                 id="modifyTags"
                                 label="Tags"
-                                defaultValue={() =>{
-                                    let outt = "";
-                                    for(let lap=0; lap < (tags.length - 1); lap++){
-                                        outt += tags[lap] + ",";
-                                    }
-                                    if(tags.length > 0){
-                                        outt += tags[tags.length - 1];
-                                    }
-                                    return outt;
-                                }}
                                 onChange={event => {
-                                    tags = event.target.value;
+                                    let valiaikainen = event.target.value;
+                                    tags = valiaikainen.split(",");
                                 }}
                                 fullWidth
                                 />
@@ -296,54 +260,6 @@ function App() {
                             </Button>
                             <Button onClick={handleClose} color="primary">
                                 Save
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                    {/* comment view */}
-                    <Dialog open={comment} onClose={handleCloseComment} aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title">Comments</DialogTitle>
-                        <DialogContent>
-                            {/* list of comments */}
-                            <ul>
-                                {() => {
-                                    let helpList = [];
-                                    for(let lap=0; lap < comments.length;lap++){
-                                        helpList.push(<li>Author: {comments[lap].getAuthor()} comment: {comments[lap].getText()}</li>)
-                                    }
-                                    return helpList;
-                                }}
-                            </ul>
-                            <br/>
-                            <br />
-                            <TextField
-                                margin="dense"
-                                id="modifyCommets"
-                                label="Text"
-                                defaultValue={commentText}
-                                onChange={event => {
-                                    commentText = event.target.value;
-                                }}
-                                fullWidth
-                            />
-                            <br />
-                            <br />
-                            <TextField
-                                margin="dense"
-                                id="modifyCommentAuthor"
-                                label="Author"
-                                defaultValue={commentAuthor}
-                                onChange={event => {
-                                    commentAuthor = event.target.value;
-                                }}
-                                fullWidth
-                                />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleCloseComment2} color="primary">
-                                Close
-                            </Button>
-                            <Button onClick={handleCloseComment} color="primary">
-                                Add new comment
                             </Button>
                         </DialogActions>
                     </Dialog>
