@@ -11,6 +11,9 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
+import Chip from '@material-ui/core/Chip';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
 
 var blogPost;
 var suorita = false;
@@ -34,6 +37,16 @@ export default class ShowOne extends React.Component{
         this.setState({ id: blog, open: false});
     }
     render() {
+        const classes = makeStyles((theme) => ({
+            root: {
+                display: 'flex',
+                justifyContent: 'center',
+                flexWrap: 'wrap',
+                '& > *': {
+                    margin: theme.spacing(0.5),
+                },
+            },
+        }));
         const handleClickOpen = () => {
             //get data and put it to variables
             authorOut = blogPost.getAuthor();
@@ -68,6 +81,7 @@ export default class ShowOne extends React.Component{
             });
         }
         if(nayta) {
+            let tagsTexts = blogPost.getTags();
             return (<div>
                 <Grid container spacing={3}>
                     <Grid item xs={8}>
@@ -98,10 +112,20 @@ export default class ShowOne extends React.Component{
                         >
                             Delete
                         </Button>
+                        <br />
+                        <br />
+                        <h3>Tags:</h3>
+                        <br/>
+                        <Paper className={classes.root}>
+                            {
+                                tagsTexts.map((data) =>{
+                                    return(<Chip label={data.tagId}/>);
+                                })
+                            }
+                        </Paper>
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
-
                 </Grid>
                 {/* post modify */}
                 <Dialog open={this.state.open} onClose={handleClose} aria-labelledby="form-dialog-title">
