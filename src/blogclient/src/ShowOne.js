@@ -14,6 +14,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Chip from '@material-ui/core/Chip';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import commentData from "./commentData";
 
 var blogPost;
 var suorita = false;
@@ -24,6 +25,9 @@ var textOut;
 var authorOut;
 //tags
 var tags = [];
+//for comment
+var commentAuthor;
+var commentText;
 
 export default class ShowOne extends React.Component{
     constructor(props) {
@@ -34,7 +38,7 @@ export default class ShowOne extends React.Component{
         const blog  = this.props.match.params.blog;
         console.log("ShowOne data: " + blog);
         suorita = true;
-        this.setState({ id: blog, open: false});
+        this.setState({ id: blog, open: false, comment: false});
     }
     render() {
         const classes = makeStyles((theme) => ({
@@ -68,6 +72,24 @@ export default class ShowOne extends React.Component{
         // This call when dialog close without modify
         const handleClose2 = () => {
             this.setState({open: false});
+        };
+        //button action to new comment adding
+        const handleClickOpenComment = () => {
+            this.setState({comment: true});
+        };
+        // This call when dialog close
+        const handleCloseComment = () => {
+            //add comment to backend
+            let outData = new commentData(commentAuthor, commentText);
+            utils.prototype.addComment(outData, this.state.id);
+            //load list data again with setTimeout because fetch need time
+            setTimeout(() => {
+                this.setState({comment: false});
+            } , 750);
+        };
+        // This call when dialog close without modify
+        const handleClose2Comment = () => {
+            this.setState({comment: false});
         };
         if(suorita) {
             let ids = this.state.id;
@@ -126,6 +148,9 @@ export default class ShowOne extends React.Component{
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
+                    <Button variant="contained" color="primary" onClick={handleClickOpenComment}>
+                        Add new comment
+                    </Button>
                 </Grid>
                 {/* post modify */}
                 <Dialog open={this.state.open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -170,6 +195,40 @@ export default class ShowOne extends React.Component{
                             Cancel
                         </Button>
                         <Button onClick={handleClose} color="primary">
+                            Save
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                {/* comment adding */}
+                <Dialog open={this.state.comment} onClose={handleCloseComment} aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">Add new comment</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            margin="dense"
+                            id="authorcomment"
+                            label="Author"
+                            onChange={event => {
+                                let valiaikainen = event.target.value;
+                                commentAuthor = valiaikainen;
+                            }}
+                            fullWidth
+                            />
+                        <TextField
+                            margin="dense"
+                            id="textcomment"
+                            label="Text"
+                            onChange={event => {
+                                let valiaikainen = event.target.value;
+                                commentText = valiaikainen;
+                            }}
+                            fullWidth
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose2Comment} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={handleCloseComment} color="primary">
                             Save
                         </Button>
                     </DialogActions>

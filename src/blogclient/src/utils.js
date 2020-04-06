@@ -50,4 +50,17 @@ export default class utils {
             alert("add least 2 tags. (separate tags with ,)");
         }
     }
+    //add comment
+    addComment(comment, id){
+        let authorData = comment.getAuthor();
+        let textData = comment.getText();
+        const data = {author: authorData, text: textData};
+        fetch("http://localhost:8080/comment/" + id, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+    }
 }
