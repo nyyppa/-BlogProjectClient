@@ -128,6 +128,8 @@ export default class ShowOne extends React.Component{
                     <Grid item xs={4}>
                         <h2>Author: {blogPost.getAuthor()}</h2>
                         <br/>
+                        <h3>Create time: {blogPost.getTIME()}</h3>
+                        <br/>
                         {/* open modify view */}
                         <IconButton color="primary" aria-label="modify" onClick={() => {
                             //send information of id
