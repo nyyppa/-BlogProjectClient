@@ -25,7 +25,9 @@ export default class Post {
         this.TAGS = uusi;
     }
     setTIME(value){
-        this.TIME = value;
+        let date = new Date(parseInt(value));
+        this.TIME = date.toUTCString();
+        console.log("time: " + this.TIME);
     }
     getTIME(){
         return this.TIME;
