@@ -37,7 +37,7 @@ export default class ShowTags extends React.Component{
             })
         }
         if(nayta){
-            return(<div><h1>List of posts what contains: {this.state.id}</h1><BlogList lista={lista}/></div>);
+            return(<div><h1>List of posts with: {this.state.id}</h1><BlogList lista={lista}/></div>);
         } else {
             return (<h1>Downloading...</h1>);
         }
