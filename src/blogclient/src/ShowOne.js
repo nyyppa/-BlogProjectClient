@@ -159,7 +159,9 @@ export default class ShowOne extends React.Component{
                         <Paper className={classes.root}>
                             {
                                 tagsTexts.map((data) =>{
-                                    return(<Chip label={data.tagId}/>);
+                                    return(<Chip label={data.tagId} onClick={() =>{
+                                        window.location.assign("../tags/" + data.tagId);
+                                    }}/>);
                                 })
                             }
                         </Paper>

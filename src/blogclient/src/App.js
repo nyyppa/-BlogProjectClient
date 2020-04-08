@@ -10,16 +10,13 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import ViewStreamIcon from '@material-ui/icons/ViewStream';
 import AddIcon from '@material-ui/icons/Add';
-import ListItem from '@material-ui/core/ListItem';
-import { FixedSizeList } from 'react-window';
-import AutoSizer from "react-virtualized-auto-sizer";
 import Button from '@material-ui/core/Button';
 import utils from "./utils";
 import TextField from "@material-ui/core/TextField";
 import Center from 'react-center';
 import SaveIcon from '@material-ui/icons/Save';
-import ListItemText from '@material-ui/core/ListItemText';
 import SearchIcon from '@material-ui/icons/Search';
+import BlogList from "./BlogList";
 
 var lista = [];
 var suorita = true;
@@ -29,7 +26,6 @@ var textOut;
 var authorOut;
 //tags
 var tags = [];
-var maxShowText = 10;
 //create tabpanel
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -93,20 +89,9 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
   },
 }));
-const useStyles2 = makeStyles(theme => ({
-    root: {
-        width: '100%',
-        height: '85vh',
-        backgroundColor: theme.palette.background.paper,
-    },
-}));
-//open blog post
-const openBlog = (key) =>{
-    window.location.assign("../show/" + key);
-};
+
 function App() {
     const classes = useStyles();
-    const classes2 = useStyles2();
     const [value, setValue] = React.useState(0);
     const [, forceUpdate] = React.useReducer(x => x + 1, 0);
     //run when mount
@@ -139,33 +124,7 @@ function App() {
             </AppBar>
             {/* tab of post list */}
             <TabPanel value={value} index={0}>
-                <div className={classes2.root}>
-                    <AutoSizer>
-                        {({height, width}) => (
-                            <FixedSizeList height={height} width={width} itemSize={500} itemCount={lista.length}>
-                                {({ index, style }) => {
-                                    // list item. index is place of item in list or array
-                                    let h = lista[index].getText();
-                                    let o = "";
-                                    for(let lap=0; lap < maxShowText; lap++){
-                                        o += h.charAt(lap);
-                                    }
-                                    o += "...";
-                                    let i = lista[index].getID();
-                                    return (
-                                        <ListItem key={index} onClick={() => openBlog(i)} style={{cursor: "pointer"}}>
-                                                <Box width={1}>
-                                                        <ListItemText primary={o}
-                                                        >
-                                                        </ListItemText>
-                                                </Box>
-                                        </ListItem>
-                                    );
-                                }}
-                            </FixedSizeList>
-                        )}
-                    </AutoSizer>
-                </div>
+                <BlogList lista={lista}/>
             </TabPanel>
             { /* post adding tab */}
             <TabPanel value={value} index={1}>
