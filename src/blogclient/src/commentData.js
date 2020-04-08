@@ -2,6 +2,7 @@ export default class commentData{
     constructor(author, text) {
         this.AUTHOR = author;
         this.TEXT = text;
+        this.ID = 0;
     }
     getAuthor(){
         return this.AUTHOR;
@@ -14,5 +15,11 @@ export default class commentData{
     }
     setText(uusi){
         this.TEXT = uusi;
+    }
+    setID(id){
+        this.ID = id;
+    }
+    getID(){
+        return this.ID;
     }
 }

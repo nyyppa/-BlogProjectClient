@@ -38,7 +38,7 @@ export default class ShowOne extends React.Component{
         const blog  = this.props.match.params.blog;
         console.log("ShowOne data: " + blog);
         suorita = true;
-        this.setState({ id: blog, open: false, comment: false});
+        this.setState({ id: blog, open: false, comment: false, allcomments: []});
     }
     render() {
         const classes = makeStyles((theme) => ({
@@ -49,6 +49,11 @@ export default class ShowOne extends React.Component{
                 '& > *': {
                     margin: theme.spacing(0.5),
                 },
+            },
+            root2: {
+                width: '100%',
+                height: '85vh',
+                backgroundColor: theme.palette.background.paper,
             },
         }));
         const handleClickOpen = () => {
@@ -93,17 +98,28 @@ export default class ShowOne extends React.Component{
         };
         if(suorita) {
             let ids = this.state.id;
+            let list = [];
             fetch("http://localhost:8080/blogs/" + ids).then(response => response.json()).then(data => {
                 console.log("json in showdata: " + JSON.stringify(data));
                 blogPost = new post(data.blogId, data.author, data.text, data.tags);
+                blogPost.setTIME(data.creationTime);
             }).then(i => {
                 suorita = false;
                 nayta = true;
-                this.setState({id: ids});
+                fetch("http://localhost:8080/comment/" + ids).then(response => response.json()).then(data =>{
+                    for (const item of data){
+                        let com = new commentData(item.author, item.text);
+                        com.setID(item.commentId);
+                        list.push(com);
+                    }
+                }).then(i => {
+                   this.setState({id: ids, allcomments: list});
+                });
             });
         }
         if(nayta) {
             let tagsTexts = blogPost.getTags();
+            let comments = this.state.allcomments;
             return (<div>
                 <Grid container spacing={3}>
                     <Grid item xs={8}>
@@ -151,6 +167,7 @@ export default class ShowOne extends React.Component{
                     <Button variant="contained" color="primary" onClick={handleClickOpenComment}>
                         Add new comment
                     </Button>
+
                 </Grid>
                 {/* post modify */}
                 <Dialog open={this.state.open} onClose={handleClose} aria-labelledby="form-dialog-title">

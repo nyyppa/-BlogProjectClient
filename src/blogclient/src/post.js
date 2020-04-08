@@ -4,6 +4,7 @@ export default class Post {
         this.AUTHOR = author;
         this.TEXT = text;
         this.TAGS = tags;
+        this.TIME = "null";
     }
     getID(){
         return this.ID;
@@ -22,5 +23,11 @@ export default class Post {
     }
     setTags(uusi){
         this.TAGS = uusi;
+    }
+    setTIME(value){
+        this.TIME = value;
+    }
+    getTIME(){
+        return this.TIME;
     }
 }
