@@ -1,5 +1,6 @@
 import React from 'react';
 import post from "./post";
+import BlogList from "./BlogList";
 
 var suorita = false;
 var nayta = false;
@@ -32,10 +33,11 @@ export default class ShowTags extends React.Component{
             }).then(i => {
                 suorita = false;
                 nayta = true;
+                this.setState({ id: this.state.id});
             })
         }
         if(nayta){
-            return(<div></div>);
+            return(<div><h1>List of posts what contains: {this.state.id}</h1><BlogList lista={lista}/></div>);
         } else {
             return (<h1>Downloading...</h1>);
         }
