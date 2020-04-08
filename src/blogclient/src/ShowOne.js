@@ -15,6 +15,7 @@ import Chip from '@material-ui/core/Chip';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import commentData from "./commentData";
+import CommentList from "./CommentList";
 
 var blogPost;
 var suorita = false;
@@ -89,7 +90,7 @@ export default class ShowOne extends React.Component{
             utils.prototype.addComment(outData, this.state.id);
             //load list data again with setTimeout because fetch need time
             setTimeout(() => {
-                this.setState({comment: false});
+                window.location.reload();
             } , 750);
         };
         // This call when dialog close without modify
@@ -158,9 +159,9 @@ export default class ShowOne extends React.Component{
                         <br/>
                         <Paper className={classes.root}>
                             {
-                                tagsTexts.map((data) =>{
-                                    return(<Chip label={data.tagId} onClick={() =>{
-                                        window.location.assign("../tags/" + data.tagId);
+                                tagsTexts.map((data2) =>{
+                                    return(<Chip label={data2.tagId} onClick={() =>{
+                                        window.location.assign("../tags/" + data2.tagId);
                                     }}/>);
                                 })
                             }
@@ -171,7 +172,7 @@ export default class ShowOne extends React.Component{
                     <Button variant="contained" color="primary" onClick={handleClickOpenComment}>
                         Add new comment
                     </Button>
-
+                    <CommentList lista={comments}/>
                 </Grid>
                 {/* post modify */}
                 <Dialog open={this.state.open} onClose={handleClose} aria-labelledby="form-dialog-title">
