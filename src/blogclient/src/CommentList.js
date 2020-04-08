@@ -1,10 +1,5 @@
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import AutoSizer from "react-virtualized-auto-sizer";
-import {FixedSizeList} from "react-window";
-import ListItem from "@material-ui/core/ListItem";
-import Box from "@material-ui/core/Box";
-import ListItemText from "@material-ui/core/ListItemText";
 const useStyles2 = makeStyles(theme => ({
     root: {
         width: '100%',
