@@ -63,4 +63,19 @@ export default class utils {
             body: JSON.stringify(data),
         })
     }
+    //change comment
+    changeComment(comment, id){
+        let authorData = comment.getAuthor();
+        let textData = comment.getText();
+        let idu = comment.getID();
+        const data = {commentId: idu, author: authorData, text: textData};
+        console.log("data= " + JSON.stringify(data));
+        fetch("http://localhost:8080/comment/" + id, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+    }
 }

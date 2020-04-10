@@ -168,11 +168,11 @@ export default class ShowOne extends React.Component{
                         </Paper>
                     </Grid>
                 </Grid>
-                <Grid container spacing={3}>
+                <Grid item spacing={3} xs={12}>
                     <Button variant="contained" color="primary" onClick={handleClickOpenComment}>
                         Add new comment
                     </Button>
-                    <CommentList lista={comments}/>
+                    <CommentList lista={comments} id={this.state.id}/>
                 </Grid>
                 {/* post modify */}
                 <Dialog open={this.state.open} onClose={handleClose} aria-labelledby="form-dialog-title">
