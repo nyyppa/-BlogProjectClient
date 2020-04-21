@@ -17,6 +17,7 @@ import Center from 'react-center';
 import SaveIcon from '@material-ui/icons/Save';
 import SearchIcon from '@material-ui/icons/Search';
 import BlogList from "./BlogList";
+import SearchView from "./SearchView";
 
 var lista = [];
 var suorita = true;
@@ -179,7 +180,7 @@ function App() {
                 </Center>
             </TabPanel>
             <TabPanel value={value} index={2}>
-                <h1>testi</h1>
+                <SearchView />
             </TabPanel>
         </div>);
 
