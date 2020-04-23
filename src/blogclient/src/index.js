@@ -7,11 +7,13 @@ import {Route, Link, BrowserRouter} from 'react-router-dom';
 import ShowOne from "./ShowOne";
 import Deletedone from "./deleteDone";
 import ShowTags from "./ShowTags";
+import LoginPage from "./LoginPage";
 
 const maini = () => <App/>;
 const posting = (props) => <ShowOne {...props}/>;
 const del = () => <Deletedone/>;
 const tags = (props) => <ShowTags {...props}/>;
+const sign = () => <LoginPage/>;
 class Help extends React.Component{
     render() {
         return (
@@ -20,6 +22,7 @@ class Help extends React.Component{
             <Route path="/show/:blog" component={posting} />
             <Route path="/deletion" component={del} />
             <Route path="/tags/:tag" component={tags}/>
+            <Route path="/user" component={sign}/>
           </BrowserRouter>
         );
     }

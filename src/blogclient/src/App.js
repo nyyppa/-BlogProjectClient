@@ -18,6 +18,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import SearchIcon from '@material-ui/icons/Search';
 import BlogList from "./BlogList";
 import SearchView from "./SearchView";
+import LoginButton from "./LoginButton";
 
 var lista = [];
 var suorita = true;
@@ -108,6 +109,7 @@ function App() {
     };
     return (
         <div className={classes.root}>
+            <LoginButton/>
             <AppBar position="static" color="default">
                 <Tabs
                     value={value}
