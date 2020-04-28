@@ -22,7 +22,7 @@ class Help extends React.Component{
             <Route path="/show/:blog" component={posting} />
             <Route path="/deletion" component={del} />
             <Route path="/tags/:tag" component={tags}/>
-            <Route path="/user" component={sign}/>
+            <Route path="/login" component={sign}/>
           </BrowserRouter>
         );
     }

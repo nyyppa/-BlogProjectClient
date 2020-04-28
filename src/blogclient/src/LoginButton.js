@@ -6,7 +6,7 @@ function LoginButton() {
         <Button variant="contained"
                 color="secondary"
                 onClick={() => {
-                    window.location.assign("/user");
+                    window.location.assign("/login");
                 }}>Login</Button>
     );
 }
