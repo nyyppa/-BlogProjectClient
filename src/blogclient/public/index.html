@@ -24,10 +24,52 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>Blog Client</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/js-cookie/js.cookie.js"></script>
+    <script type="text/javascript">
+      $.get("/user", function(data) {
+        $("#user").html(data.name);
+        $(".unauthenticated").hide()
+        $(".authenticated").show()
+      });
+      var logout = function() {
+        $.post("/logout", function() {
+          $("#user").html('');
+          $(".unauthenticated").show();
+          $(".authenticated").hide();
+        })
+        return true;
+      }
+      $.ajaxSetup({
+        beforeSend : function(xhr, settings) {
+          if (settings.type == 'POST' || settings.type == 'PUT'
+                  || settings.type == 'DELETE') {
+            if (!(/^http:.*/.test(settings.url) || /^https:.*/
+                    .test(settings.url))) {
+              // Only send the token to relative URLs i.e. locally.
+              xhr.setRequestHeader("X-XSRF-TOKEN",
+                      Cookies.get('XSRF-TOKEN'));
+            }
+          }
+        }
+      });
+    </script>
+
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div class="container unauthenticated">
+      <button onClick="location.href='/oauth2/authorization/github';">Login with Github</button>
+    </div>
+    <div class="container authenticated" style="display:none">
+      Logged in as: <span id="user"></span>
+      <div>
+        <button onClick="logout()" class="btn btn-primary">Logout</button>
+      </div>
+    </div>
     <div id="root"></div>
     <!--
       This HTML file is a template.
