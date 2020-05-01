@@ -19,7 +19,7 @@ class Help extends React.Component{
             <Route exact={true} path="/" component={maini}/>
             <Route path="/show/:blog" component={posting} />
             <Route path="/deletion" component={del} />
-            <Route path="/tags/:tag" component={tags}/>
+            <Route path="/showtag/:tag" component={tags}/>
           </BrowserRouter>
         );
     }

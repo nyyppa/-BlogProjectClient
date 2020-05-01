@@ -161,7 +161,7 @@ export default class ShowOne extends React.Component{
                             {
                                 tagsTexts.map((data2) =>{
                                     return(<Chip label={data2.tagId} onClick={() =>{
-                                        window.location.assign("../tags/" + data2.tagId);
+                                        window.location.assign("../showtag/" + data2.tagId);
                                     }}/>);
                                 })
                             }
