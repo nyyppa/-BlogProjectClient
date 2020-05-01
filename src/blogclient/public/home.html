@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
@@ -28,8 +28,7 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <h3 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h3>
-    <a th:href="@{/hello}">Account</a>
+    <a href="/hello">Account</a>
     <div id="root"></div>
     <!--
       This HTML file is a template.
