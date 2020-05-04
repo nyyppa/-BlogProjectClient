@@ -57,6 +57,7 @@ export default class ShowOne extends React.Component{
                 backgroundColor: theme.palette.background.paper,
             },
         }));
+        const userNow = window.sessionStorage.getItem("in");
         const handleClickOpen = () => {
             //get data and put it to variables
             authorOut = blogPost.getAuthor();
@@ -121,141 +122,172 @@ export default class ShowOne extends React.Component{
         if(nayta) {
             let tagsTexts = blogPost.getTags();
             let comments = this.state.allcomments;
-            return (<div>
-                <Grid container spacing={3}>
-                    <Grid item xs={8}>
-                        {blogPost.getText()}
+            //if admin then show adding element else not
+            if(userNow == "admin") {
+                return (<div>
+                    <Grid container spacing={3}>
+                        <Grid item xs={8}>
+                            {blogPost.getText()}
+                        </Grid>
+                        <Grid item xs={4}>
+                            <h2>Author: {blogPost.getAuthor()}</h2>
+                            <br/>
+                            <h3>Create time: {blogPost.getTIME()}</h3>
+                            <br/>
+                            {/* open modify view */}
+                            <IconButton color="primary" aria-label="modify" onClick={() => {
+                                //send information of id
+                                handleClickOpen();
+                            }}>
+                                <SettingsIcon/>
+                            </IconButton>
+                            <br/>
+                            {/* delete post from backend */}
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => {
+                                    utils.prototype.removePost(blogPost.getID());
+                                    setTimeout(() => {
+                                        window.location.assign("../deletion");
+                                    }, 1000);
+                                }}
+                                startIcon={<DeleteIcon/>}
+                            >
+                                Delete
+                            </Button>
+                            <br/>
+                            <br/>
+                            <h3>Tags:</h3>
+                            <br/>
+                            <Paper className={classes.root}>
+                                {
+                                    tagsTexts.map((data2) => {
+                                        return (<Chip label={data2.tagId} onClick={() => {
+                                            window.location.assign("../showtag/" + data2.tagId);
+                                        }}/>);
+                                    })
+                                }
+                            </Paper>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={4}>
-                        <h2>Author: {blogPost.getAuthor()}</h2>
-                        <br/>
-                        <h3>Create time: {blogPost.getTIME()}</h3>
-                        <br/>
-                        {/* open modify view */}
-                        <IconButton color="primary" aria-label="modify" onClick={() => {
-                            //send information of id
-                            handleClickOpen();
-                        }}>
-                            <SettingsIcon />
-                        </IconButton>
-                        <br/>
-                        {/* delete post from backend */}
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => {
-                                utils.prototype.removePost(blogPost.getID());
-                                setTimeout(() => {
-                                    window.location.assign("../deletion");
-                                }, 1000);
-                            }}
-                            startIcon={<DeleteIcon />}
-                        >
-                            Delete
+                    <Grid item spacing={3} xs={12}>
+                        <Button variant="contained" color="primary" onClick={handleClickOpenComment}>
+                            Add new comment
                         </Button>
-                        <br />
-                        <br />
-                        <h3>Tags:</h3>
-                        <br/>
-                        <Paper className={classes.root}>
-                            {
-                                tagsTexts.map((data2) =>{
-                                    return(<Chip label={data2.tagId} onClick={() =>{
-                                        window.location.assign("../showtag/" + data2.tagId);
-                                    }}/>);
-                                })
-                            }
-                        </Paper>
+                        <CommentList lista={comments} id={this.state.id}/>
                     </Grid>
-                </Grid>
-                <Grid item spacing={3} xs={12}>
-                    <Button variant="contained" color="primary" onClick={handleClickOpenComment}>
-                        Add new comment
-                    </Button>
-                    <CommentList lista={comments} id={this.state.id}/>
-                </Grid>
-                {/* post modify */}
-                <Dialog open={this.state.open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">Modify this blog post</DialogTitle>
-                    <DialogContent>
-                        <TextField
-                            margin="dense"
-                            id="modifyAuthor"
-                            label="Author"
-                            defaultValue={authorOut}
-                            onChange={event => {
-                                //when value change then update value of variable
-                                authorOut = event.target.value;
-                            }}
-                            fullWidth
-                        />
-                        <TextField
-                            margin="dense"
-                            multiline
-                            id="modifyText"
-                            label="Text"
-                            defaultValue={textOut}
-                            onChange={event => {
-                                //when value change then update value of variable
-                                textOut = event.target.value;
-                            }}
-                            fullWidth
-                        />
-                        <TextField
-                            margin="dense"
-                            id="modifyTags"
-                            label="Tags"
-                            onChange={event => {
-                                let valiaikainen = event.target.value;
-                                tags = valiaikainen.split(",");
-                            }}
-                            fullWidth
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleClose2} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={handleClose} color="primary">
-                            Save
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-                {/* comment adding */}
-                <Dialog open={this.state.comment} onClose={handleCloseComment} aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">Add new comment</DialogTitle>
-                    <DialogContent>
-                        <TextField
-                            margin="dense"
-                            id="authorcomment"
-                            label="Author"
-                            onChange={event => {
-                                let valiaikainen = event.target.value;
-                                commentAuthor = valiaikainen;
-                            }}
-                            fullWidth
+                    {/* post modify */}
+                    <Dialog open={this.state.open} onClose={handleClose} aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">Modify this blog post</DialogTitle>
+                        <DialogContent>
+                            <TextField
+                                margin="dense"
+                                id="modifyAuthor"
+                                label="Author"
+                                defaultValue={authorOut}
+                                onChange={event => {
+                                    //when value change then update value of variable
+                                    authorOut = event.target.value;
+                                }}
+                                fullWidth
                             />
-                        <TextField
-                            margin="dense"
-                            id="textcomment"
-                            label="Text"
-                            onChange={event => {
-                                let valiaikainen = event.target.value;
-                                commentText = valiaikainen;
-                            }}
-                            fullWidth
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleClose2Comment} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={handleCloseComment} color="primary">
-                            Save
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            </div>);
+                            <TextField
+                                margin="dense"
+                                multiline
+                                id="modifyText"
+                                label="Text"
+                                defaultValue={textOut}
+                                onChange={event => {
+                                    //when value change then update value of variable
+                                    textOut = event.target.value;
+                                }}
+                                fullWidth
+                            />
+                            <TextField
+                                margin="dense"
+                                id="modifyTags"
+                                label="Tags"
+                                onChange={event => {
+                                    let valiaikainen = event.target.value;
+                                    tags = valiaikainen.split(",");
+                                }}
+                                fullWidth
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleClose2} color="primary">
+                                Cancel
+                            </Button>
+                            <Button onClick={handleClose} color="primary">
+                                Save
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                    {/* comment adding */}
+                    <Dialog open={this.state.comment} onClose={handleCloseComment} aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">Add new comment</DialogTitle>
+                        <DialogContent>
+                            <TextField
+                                margin="dense"
+                                id="authorcomment"
+                                label="Author"
+                                onChange={event => {
+                                    let valiaikainen = event.target.value;
+                                    commentAuthor = valiaikainen;
+                                }}
+                                fullWidth
+                            />
+                            <TextField
+                                margin="dense"
+                                id="textcomment"
+                                label="Text"
+                                onChange={event => {
+                                    let valiaikainen = event.target.value;
+                                    commentText = valiaikainen;
+                                }}
+                                fullWidth
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleClose2Comment} color="primary">
+                                Cancel
+                            </Button>
+                            <Button onClick={handleCloseComment} color="primary">
+                                Save
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </div>);
+            } else{
+                return (<div>
+                    <Grid container spacing={3}>
+                        <Grid item xs={8}>
+                            {blogPost.getText()}
+                        </Grid>
+                        <Grid item xs={4}>
+                            <h2>Author: {blogPost.getAuthor()}</h2>
+                            <br/>
+                            <h3>Create time: {blogPost.getTIME()}</h3>
+                            <br/>
+                            <h3>Tags:</h3>
+                            <br/>
+                            <Paper className={classes.root}>
+                                {
+                                    tagsTexts.map((data2) => {
+                                        return (<Chip label={data2.tagId} onClick={() => {
+                                            window.location.assign("../showtag/" + data2.tagId);
+                                        }}/>);
+                                    })
+                                }
+                            </Paper>
+                        </Grid>
+                    </Grid>
+                    <Grid item spacing={3} xs={12}>
+                        <CommentList lista={comments} id={this.state.id}/>
+                    </Grid>
+                </div>);
+            }
         } else{
             return (<div><h1>Downloading...</h1></div>);
         }

@@ -95,6 +95,7 @@ function App() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     const [, forceUpdate] = React.useReducer(x => x + 1, 0);
+    const userNow = window.sessionStorage.getItem("in");
     //run when mount
     useEffect(() => {
         //check if code is not run before
@@ -106,83 +107,110 @@ function App() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-    return (
-        <div className={classes.root}>
-            <AppBar position="static" color="default">
-                <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    variant="scrollable"
-                    scrollButtons="on"
-                    indicatorColor="primary"
-                    textColor="primary"
-                    aria-label="scrollable force tabs example"
-                >
-                    <Tab label="Show posts" icon={<ViewStreamIcon />} {...a11yProps(0)} />
-                    <Tab label="Add new post" icon={<AddIcon />} {...a11yProps(1)} />
-                    <Tab label="Search" icon={<SearchIcon />} {...a11yProps(2)}/>
-                </Tabs>
-            </AppBar>
-            {/* tab of post list */}
-            <TabPanel value={value} index={0}>
-                <BlogList lista={lista}/>
-            </TabPanel>
-            { /* post adding tab */}
-            <TabPanel value={value} index={1}>
-                <Center>
-                <form noValidate autoComplete="off">
-                    <TextField id="outlinedBasic" label="Author" variant="outlined"
-                               onChange={event => {
-                                   //when value change then update value of variable
-                                   authorOut = event.target.value;
-                               }}
-                    />
-                    <br/>
-                    <br/>
-                    <TextField id="outlinedMultiline"
-                               label="Text"
-                               multiline
-                               rows="4"
-                               variant="outlined"
-                               onChange={event => {
-                                   //when value change then update value of variable
-                                   textOut = event.target.value;
-                               }}/>
-                               <br/>
-                               <br/>
-                               <TextField id="tags"
-                                          label="Tags"
-                                          variant="outlined"
-                                          onChange={event => {
-                                            let valiaikainen = event.target.value;
-                                            tags = valiaikainen.split(",");
-                                          }}
-                                          />
-                                          <br/>
-                                          <br/>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        size="large"
-                        startIcon={<SaveIcon />}
-                        onClick={ () => {
-                            utils.prototype.addNewPost(authorOut, textOut, tags);
-                            // need set timeout so fetch run before list load again
-                            setTimeout(() => {
-                                load(false, forceUpdate);
-                            }, 500);
-                            }
-                        }
+    if(userNow == "admin") {
+        return (
+            <div className={classes.root}>
+                <AppBar position="static" color="default">
+                    <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        variant="scrollable"
+                        scrollButtons="on"
+                        indicatorColor="primary"
+                        textColor="primary"
+                        aria-label="scrollable force tabs example"
                     >
-                        Save
-                    </Button>
-                </form>
-                </Center>
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-                <SearchView />
-            </TabPanel>
-        </div>);
+                        <Tab label="Show posts" icon={<ViewStreamIcon/>} {...a11yProps(0)} />
+                        <Tab label="Add new post" icon={<AddIcon/>} {...a11yProps(1)} />
+                        <Tab label="Search" icon={<SearchIcon/>} {...a11yProps(2)}/>
+                    </Tabs>
+                </AppBar>
+                {/* tab of post list */}
+                <TabPanel value={value} index={0}>
+                    <BlogList lista={lista}/>
+                </TabPanel>
+                { /* post adding tab */}
+                <TabPanel value={value} index={1}>
+                    <Center>
+                        <form noValidate autoComplete="off">
+                            <TextField id="outlinedBasic" label="Author" variant="outlined"
+                                       onChange={event => {
+                                           //when value change then update value of variable
+                                           authorOut = event.target.value;
+                                       }}
+                            />
+                            <br/>
+                            <br/>
+                            <TextField id="outlinedMultiline"
+                                       label="Text"
+                                       multiline
+                                       rows="4"
+                                       variant="outlined"
+                                       onChange={event => {
+                                           //when value change then update value of variable
+                                           textOut = event.target.value;
+                                       }}/>
+                            <br/>
+                            <br/>
+                            <TextField id="tags"
+                                       label="Tags"
+                                       variant="outlined"
+                                       onChange={event => {
+                                           let valiaikainen = event.target.value;
+                                           tags = valiaikainen.split(",");
+                                       }}
+                            />
+                            <br/>
+                            <br/>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                size="large"
+                                startIcon={<SaveIcon/>}
+                                onClick={() => {
+                                    utils.prototype.addNewPost(authorOut, textOut, tags);
+                                    // need set timeout so fetch run before list load again
+                                    setTimeout(() => {
+                                        load(false, forceUpdate);
+                                    }, 500);
+                                }
+                                }
+                            >
+                                Save
+                            </Button>
+                        </form>
+                    </Center>
+                </TabPanel>
+                <TabPanel value={value} index={2}>
+                    <SearchView/>
+                </TabPanel>
+            </div>);
+    } else{
+        return (
+            <div className={classes.root}>
+                <AppBar position="static" color="default">
+                    <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        variant="scrollable"
+                        scrollButtons="on"
+                        indicatorColor="primary"
+                        textColor="primary"
+                        aria-label="scrollable force tabs example"
+                    >
+                        <Tab label="Show posts" icon={<ViewStreamIcon/>} {...a11yProps(0)} />
+                        <Tab label="Search" icon={<SearchIcon/>} {...a11yProps(2)}/>
+                    </Tabs>
+                </AppBar>
+                {/* tab of post list */}
+                <TabPanel value={value} index={0}>
+                    <BlogList lista={lista}/>
+                </TabPanel>
+                <TabPanel value={value} index={2}>
+                    <SearchView/>
+                </TabPanel>
+            </div>);
+    }
 
 }
 
