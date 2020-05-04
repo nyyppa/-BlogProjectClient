@@ -28,6 +28,7 @@ function CommentList(props){
     const classes2 = useStyles2();
     const lista = props.lista;
     const blogId = props.id;
+    const userNow = window.sessionStorage.getItem("in");
     const [value, setValue] = React.useState(false);
     const [, forceUpdate] = React.useReducer(x => x + 1, 0);
     const handleClickOpen = (index) => {
@@ -53,50 +54,66 @@ function CommentList(props){
         setValue(false);
     };
     let values = [];
-    for(let lap=0; lap < lista.length; lap++){
-        values.push(<li><h5>Author: {lista[lap].getAuthor()}<IconButton color="primary" aria-label="modify" onClick={() => {
-            //send information of id
-            handleClickOpen(lap);
-        }}>
-            <SettingsIcon />
-        </IconButton></h5><p>{lista[lap].getText()}</p></li>);
+    if(userNow == "admin") {
+        for (let lap = 0; lap < lista.length; lap++) {
+            values.push(<li><h5>Author: {lista[lap].getAuthor()}<IconButton color="primary" aria-label="modify"
+                                                                            onClick={() => {
+                                                                                //send information of id
+                                                                                handleClickOpen(lap);
+                                                                            }}>
+                <SettingsIcon/>
+            </IconButton></h5><p>{lista[lap].getText()}</p></li>);
+        }
+        return (
+            <div>
+                <div className={classes2.root}>
+                    <h2>Comments:</h2>
+                    <ul className={classes2.listaus}>
+                        {values}
+                    </ul>
+                </div>
+                {/* modify comment */}
+                <Dialog open={value} onClose={handleClose} aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">Modify this blog post</DialogTitle>
+                    <DialogContent>
+                        <h4>{author}</h4>
+                        <TextField
+                            margin="dense"
+                            multiline
+                            id="modifyText"
+                            label="Text"
+                            defaultValue={textOut}
+                            onChange={event => {
+                                //when value change then update value of variable
+                                textOut = event.target.value;
+                            }}
+                            fullWidth
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose2} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={handleClose} color="primary">
+                            Save
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>);
+    } else{
+        for (let lap = 0; lap < lista.length; lap++) {
+            values.push(<li><h5>Author: {lista[lap].getAuthor()}</h5><p>{lista[lap].getText()}</p></li>);
+        }
+        return (
+            <div>
+                <div className={classes2.root}>
+                    <h2>Comments:</h2>
+                    <ul className={classes2.listaus}>
+                        {values}
+                    </ul>
+                </div>
+            </div>);
     }
-    return (
-        <div>
-            <div className={classes2.root}>
-                <h2>Comments:</h2>
-                <ul className={classes2.listaus}>
-                    {values}
-                </ul>
-            </div>
-            {/* modify comment */}
-            <Dialog open={value} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Modify this blog post</DialogTitle>
-                <DialogContent>
-                    <h4>{author}</h4>
-                    <TextField
-                        margin="dense"
-                        multiline
-                        id="modifyText"
-                        label="Text"
-                        defaultValue={textOut}
-                        onChange={event => {
-                            //when value change then update value of variable
-                            textOut = event.target.value;
-                        }}
-                        fullWidth
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose2} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleClose} color="primary">
-                        Save
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </div>);
 }
 
 export default CommentList;
