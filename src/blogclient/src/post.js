@@ -1,3 +1,6 @@
+/*
+This class contains information of one blog post
+ */
 export default class Post {
     constructor(id, author, text, tags) {
         this.ID = id;
@@ -22,9 +25,11 @@ export default class Post {
         return this.TAGS;
     }
     setTags(uusi){
+        //scange all tags
         this.TAGS = uusi;
     }
     setTIME(value){
+        //Set creation time
         let date = new Date(parseInt(value));
         this.TIME = date.toUTCString();
         console.log("time: " + this.TIME);

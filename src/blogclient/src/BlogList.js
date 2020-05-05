@@ -6,6 +6,7 @@ import ListItem from "@material-ui/core/ListItem";
 import Box from "@material-ui/core/Box";
 import ListItemText from "@material-ui/core/ListItemText";
 
+//how many char show in view of one post
 var maxShowText = 10;
 //open blog post
 const openBlog = (key) =>{
@@ -20,6 +21,7 @@ const useStyles2 = makeStyles(theme => ({
 }));
 function BlogList(props) {
     const classes2 = useStyles2();
+    //List of blog posts
     const lista = props.lista;
     return (<div className={classes2.root}>
         <AutoSizer>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>Account</title>
+</head>
+<body>
+<h1 id="hellot" th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+<a href="/">Go to blog</a>
+<br/>
+<br/>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out / In"/>
+</form>
+<script>
+    let user = document.getElementById("hellot").innerText;
+    let cleaning = user.split(" ");
+    let now = cleaning[1];
+    console.log("user: " + now);
+    if(now == "admin!"){
+        window.sessionStorage.setItem("in", "admin");
+    } else{
+        window.sessionStorage.setItem("in", "null");
+    }
+</script>
+</body>
+</html>

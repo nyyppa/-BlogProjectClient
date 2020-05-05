@@ -1,3 +1,6 @@
+/*
+* This class contains information of one comment
+* */
 export default class commentData{
     constructor(author, text) {
         this.AUTHOR = author;
