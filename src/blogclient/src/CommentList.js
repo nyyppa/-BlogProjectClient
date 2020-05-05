@@ -10,6 +10,7 @@ import commentData from "./commentData";
 import utils from "./utils";
 import SettingsIcon from "@material-ui/icons/Settings";
 import IconButton from "@material-ui/core/IconButton";
+//some styles
 const useStyles2 = makeStyles(theme => ({
     root: {
         width: '100%',
@@ -21,16 +22,23 @@ const useStyles2 = makeStyles(theme => ({
         listStyleType: 'none',
     },
 }));
+//comment text
 var textOut;
+//comment id
 var id;
+//comment's author
 var author;
 function CommentList(props){
     const classes2 = useStyles2();
+    //comment list
     const lista = props.lista;
+    //blog id
     const blogId = props.id;
+    //information is admin login
     const userNow = window.sessionStorage.getItem("in");
     const [value, setValue] = React.useState(false);
     const [, forceUpdate] = React.useReducer(x => x + 1, 0);
+    //open comment modify
     const handleClickOpen = (index) => {
         id = lista[index].getID();
         textOut = lista[index].getText();
@@ -54,6 +62,7 @@ function CommentList(props){
         setValue(false);
     };
     let values = [];
+    //if admin then show modify options
     if(userNow == "admin") {
         for (let lap = 0; lap < lista.length; lap++) {
             values.push(<li><h5>Author: {lista[lap].getAuthor()}<IconButton color="primary" aria-label="modify"
@@ -101,6 +110,7 @@ function CommentList(props){
                 </Dialog>
             </div>);
     } else{
+        //else not show modify options
         for (let lap = 0; lap < lista.length; lap++) {
             values.push(<li><h5>Author: {lista[lap].getAuthor()}</h5><p>{lista[lap].getText()}</p></li>);
         }

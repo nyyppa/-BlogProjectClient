@@ -18,7 +18,9 @@ import commentData from "./commentData";
 import CommentList from "./CommentList";
 
 var blogPost;
+//can get data from server
 var suorita = false;
+//can show to user
 var nayta = false;
 //text what send when create or modify post
 var textOut;
@@ -33,15 +35,18 @@ var commentText;
 export default class ShowOne extends React.Component{
     constructor(props) {
         super(props);
+        //now showing blog post id
         this.state = { id: 0};
     }
     componentDidMount (){
+        //get blog id from url
         const blog  = this.props.match.params.blog;
         console.log("ShowOne data: " + blog);
         suorita = true;
         this.setState({ id: blog, open: false, comment: false, allcomments: []});
     }
     render() {
+        //view styles
         const classes = makeStyles((theme) => ({
             root: {
                 display: 'flex',
@@ -57,7 +62,9 @@ export default class ShowOne extends React.Component{
                 backgroundColor: theme.palette.background.paper,
             },
         }));
+        //get information if user is admin
         const userNow = window.sessionStorage.getItem("in");
+        //open blog modify
         const handleClickOpen = () => {
             //get data and put it to variables
             authorOut = blogPost.getAuthor();
@@ -91,6 +98,7 @@ export default class ShowOne extends React.Component{
             utils.prototype.addComment(outData, this.state.id);
             //load list data again with setTimeout because fetch need time
             setTimeout(() => {
+                //after comment adding reload view
                 window.location.reload();
             } , 750);
         };
@@ -101,6 +109,7 @@ export default class ShowOne extends React.Component{
         if(suorita) {
             let ids = this.state.id;
             let list = [];
+            //get blog data and comments
             fetch("http://localhost:8080/blogs/" + ids).then(response => response.json()).then(data => {
                 console.log("json in showdata: " + JSON.stringify(data));
                 blogPost = new post(data.blogId, data.author, data.text, data.tags);
@@ -120,6 +129,7 @@ export default class ShowOne extends React.Component{
             });
         }
         if(nayta) {
+            //blog tags and comments
             let tagsTexts = blogPost.getTags();
             let comments = this.state.allcomments;
             //if admin then show adding element else not
@@ -149,6 +159,7 @@ export default class ShowOne extends React.Component{
                                 onClick={() => {
                                     utils.prototype.removePost(blogPost.getID());
                                     setTimeout(() => {
+                                        //after deletion show informtion of that
                                         window.location.assign("../deletion");
                                     }, 1000);
                                 }}
@@ -164,6 +175,7 @@ export default class ShowOne extends React.Component{
                                 {
                                     tagsTexts.map((data2) => {
                                         return (<Chip label={data2.tagId} onClick={() => {
+                                            //if click tag then show all posts what include that tag
                                             window.location.assign("../showtag/" + data2.tagId);
                                         }}/>);
                                     })
@@ -171,6 +183,7 @@ export default class ShowOne extends React.Component{
                             </Paper>
                         </Grid>
                     </Grid>
+                    {/* show comments view */}
                     <Grid item spacing={3} xs={12}>
                         <Button variant="contained" color="primary" onClick={handleClickOpenComment}>
                             Add new comment
@@ -260,6 +273,7 @@ export default class ShowOne extends React.Component{
                     </Dialog>
                 </div>);
             } else{
+                //this view show if user is not login as admin
                 return (<div>
                     <Grid container spacing={3}>
                         <Grid item xs={8}>
@@ -289,6 +303,7 @@ export default class ShowOne extends React.Component{
                 </div>);
             }
         } else{
+            //This show when frontend download data from backend
             return (<div><h1>Downloading...</h1></div>);
         }
     }

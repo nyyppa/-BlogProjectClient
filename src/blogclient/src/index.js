@@ -7,13 +7,17 @@ import {Route, Link, BrowserRouter} from 'react-router-dom';
 import ShowOne from "./ShowOne";
 import Deletedone from "./deleteDone";
 import ShowTags from "./ShowTags";
-
+//main view
 const maini = () => <App/>;
+//view show one blogpost
 const posting = (props) => <ShowOne {...props}/>;
+//view what show when deletion is done
 const del = () => <Deletedone/>;
+//view what show posts by tag
 const tags = (props) => <ShowTags {...props}/>;
 class Help extends React.Component{
     render() {
+        //view what contains different view depending from url
         return (
           <BrowserRouter>
             <Route exact={true} path="/" component={maini}/>
